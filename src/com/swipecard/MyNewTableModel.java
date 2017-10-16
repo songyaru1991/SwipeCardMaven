@@ -84,7 +84,7 @@ public class MyNewTableModel extends AbstractTableModel {
 	
 	}
 
-	// public MyNewTableModel(String lineno,String Shift){
+	// public SwipeCardUserTableModel(String lineno,String Shift){
 	public MyNewTableModel(String WorkshopNo,String Shift){		
 		// 先new 一下
 		TableData = new Vector<Object>();

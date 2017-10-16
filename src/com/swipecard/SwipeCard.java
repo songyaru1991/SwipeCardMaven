@@ -1344,19 +1344,52 @@ public class SwipeCard extends JFrame {
 					userNSwipe.setShift(empYesShift);
 					userNSwipe.setWorkshopNo(WorkshopNo);
 					int goWorkNCardCount =  session
-							.selectOne("selectGoWorkNByCardID", userNSwipe);
+							.selectOne("selectGoWorkNByCardID", userNSwipe);//昨日夜班上刷记录
 									 
 					int yesterdaygoWorkCardCount =  session
-							.selectOne("selectCountNByCardID", userNSwipe);								
+							.selectOne("selectCountNByCardID", userNSwipe);//昨日夜班下刷记录	
 					
-					if (goWorkNCardCount > 0 && yesterdaygoWorkCardCount==0) { 
-						// 昨日夜班已存在上刷，且夜班下刷刷卡記錄不存在
-						workDays=workDays-1;
-					}else if(yesterdaygoWorkCardCount>0){
+					if (goWorkNCardCount > 0) { 
+						// 昨日夜班已存在上刷						
+						if (yesterdaygoWorkCardCount==0) { //夜班下刷刷卡記錄不存在
+							Timestamp yesClassStart = empYesUSer.getClass_start();
+							Timestamp yesClassEnd = empYesUSer.getClass_end();
+							Timestamp goWorkSwipeTime = new Timestamp(new Date().getTime());
+
+							Calendar outWorkc = Calendar.getInstance();
+							outWorkc.setTime(yesClassEnd);
+							outWorkc.set(Calendar.HOUR_OF_DAY,
+								outWorkc.get(Calendar.HOUR_OF_DAY) + 3);
+							outWorkc.set(Calendar.MINUTE,
+								outWorkc.get(Calendar.MINUTE) + 30);
+							Date dt = outWorkc.getTime();
+							Timestamp afterClassEnd = new Timestamp(dt.getTime());
+							if (goWorkSwipeTime.before(afterClassEnd)) {
+							// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷							
+								workDays=workDays-1;
+							} 
+						}else{
+							
+							int isOutWorkSwipeDuplicate =  session
+									.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
+							if (isOutWorkSwipeDuplicate > 0) {
+								outWorkSwipeDuplicate(session, eif, cardID, empYesShift);
+								workDays=-1;
+							}
+						}
+					}else{ // 昨日夜班不存在上刷	
+
+						int outWorkNCardCount =  session
+								.selectOne("selectOutWorkByCardID", userNSwipe);//夜班昨天无上刷，今天有下刷
+						
+						if(outWorkNCardCount>0){
+							workDays=workDays+1;
+						}
 						int isOutWorkSwipeDuplicate =  session
 								.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
 						if (isOutWorkSwipeDuplicate > 0) {
 							outWorkSwipeDuplicate(session, eif, cardID, empYesShift);
+							workDays=-1;
 						}
 					}
 				}

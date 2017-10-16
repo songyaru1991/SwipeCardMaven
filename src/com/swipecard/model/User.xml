@@ -93,7 +93,7 @@
 	
 	<select id="selectCountNByCardID" parameterType='int'
 		resultType="int">
-		select count(*) as rowsd from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*) from `testSwipeCardTime` where CardID = #{CardID} 
 		<!-- AND WorkshopNo = #{WorkshopNo} -->
 		AND Shift = #{Shift}
 		AND SwipeCardTime2 is not NULL 
@@ -350,10 +350,15 @@
         count(recordid)
        FROM
         testswipecardtime 
-       WHERE (
+       WHERE ((
          DATE_FORMAT(swipecardtime, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
-         or DATE_FORMAT(swipecardtime2, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')-#{shiftDay})
-         and shift='D'
+         or DATE_FORMAT(swipecardtime2, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')-#{shiftDay}
+         and shift='D')
+         or(
+         DATE_FORMAT(swipecardtime, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
+         and swipecardtime2 is null
+         and shift='N'
+         ))
          AND CardID=#{cardID}
 	</select>
 
@@ -370,7 +375,7 @@
     {call swipecard.GET_CONTINUS_WORK_DAYS(#{newCardID,jdbcType=VARCHAR,javaType=STRING,mode=IN})}
    </select>  
    
-      <!-- Check Continues workers(7 days) -->
+      <!-- Check Continues workers(N days) -->
       <select id="getContinuesWorkDays" parameterType="User" resultType="int">
          SELECT COUNT(recordid) FROM (
             (SELECT recordid FROM testswipecardtime 
