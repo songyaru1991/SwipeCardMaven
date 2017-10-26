@@ -40,7 +40,7 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.model.User;
 
 public class SwipeCardLogin extends JFrame {
-	private final static String CurrentVersion = "V201710121";
+	private final static String CurrentVersion = "V20171018";
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	static {
@@ -173,7 +173,8 @@ public class SwipeCardLogin extends JFrame {
 				String fileName = "WorkshopNo.json";
 				jsonFileUtil.createJsonFile(workshopNoArray.toString(), fileName);
 			} else {
-				a[0] = "";
+				a = new Object[1];
+				a[0] = "--請選擇車間--";
 			}
 		} catch (Exception e) {
 			System.out.println("Error opening session");
@@ -201,6 +202,7 @@ public class SwipeCardLogin extends JFrame {
 					// System.out.println("Admin: " + a[i]);
 				}
 			} else {
+				a = new Object[1];
 				a[0] = "";
 			}
 		} catch (Exception e) {

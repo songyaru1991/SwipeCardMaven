@@ -11,6 +11,7 @@ public class EmpSwipeInfos {
 	private String Id;
 	private String Name;
 	private String RC_NO;
+	private String Swipe_Date;
 	private Timestamp SwipeCardTime;
 	private Timestamp SwipeCardTime2;
 	public String getCardID() {

@@ -29,26 +29,13 @@ public class User {
 	
 	//Table:lost_employee
 	private String SwipeDate;
-//	private int lostCon;
 	
 	//Table：emp_class和 classno
 	private String class_desc;
 	private Timestamp class_start;
 	private Timestamp class_end;
 
-//	private int rowsa;
-//	private int rowsb;
-//	private int rowsc;
-//	private int rowsd;
-//	private int rowse;
-//	private int rowsf;
-//	private int rowsg;
-//	private int goWorkCount;
-//	private int outWorkCount;
 	private int shiftDay;
-	//private int curShiftCount;
-	//private int yesShiftCount;	
-	//private int agoSevenDayShiftCount;
 	
 	private int fillRows;
 

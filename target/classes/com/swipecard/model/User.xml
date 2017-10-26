@@ -39,7 +39,7 @@
 	<select id="selectUserByLineNoAndWorkshopNo_DShift" parameterType="int" resultType="User">
 		SELECT a.CardID,b.ID,a.Name,a.RC_NO,a.SwipeCardTime,a.SwipeCardTime2
 		FROM testSwipeCardTime a
-        left join testemployee b on a.CardId=b.cardid
+        left join testemployee b on a.Id=b.id
 		WHERE 
 		WorkshopNo = #{WorkshopNo}
 		and Shift = 'D'
@@ -49,7 +49,7 @@
 	<select id="selectUserByLineNoAndWorkshopNo_NShift" parameterType="int" resultType="User">
 		SELECT a.CardID,b.ID,a.Name,a.RC_NO,a.SwipeCardTime,a.SwipeCardTime2
 		FROM testSwipeCardTime a
-        left join testemployee b on a.CardId=b.cardid
+        left join testemployee b on a.Id=b.id
 		WHERE 
 		WorkshopNo = #{WorkshopNo} 
 		<!--  PROD_LINE_CODE = #{PROD_LINE_CODE}   -->
@@ -76,7 +76,7 @@
 		resultType="int">
 		SELECT count(*) 
 		FROM `testSwipeCardTime`
-		WHERE CardID = #{CardID}
+		WHERE ID = #{Id}
 		<!--   AND WorkshopNo = #{WorkshopNo} -->
 		  AND SwipeCardTime is not NULL
 		  AND Shift = #{Shift}
@@ -85,7 +85,7 @@
 
 	<select id="selectCountBByCardID" parameterType='int'
 		resultType="int">
-		select count(*) from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*) from `testSwipeCardTime` where id = #{Id} 
 	<!-- 	AND WorkshopNo = #{WorkshopNo} -->
 		AND SwipeCardTime2 is not NULL 
 		and <![CDATA[ SwipeCardTime > curdate() and SwipeCardTime < adddate(curdate(), '+1 days') ]]>		
@@ -93,7 +93,7 @@
 	
 	<select id="selectCountNByCardID" parameterType='int'
 		resultType="int">
-		select count(*) from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*) from `testSwipeCardTime` where ID = #{id} 
 		<!-- AND WorkshopNo = #{WorkshopNo} -->
 		AND Shift = #{Shift}
 		AND SwipeCardTime2 is not NULL 
@@ -102,7 +102,7 @@
 	
 	<select id="selectGoWorkNByCardID" parameterType='int'
 		resultType="int">
-		select count(*) from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*) from `testSwipeCardTime` where ID = #{Id} 
 		<!-- AND WorkshopNo = #{WorkshopNo} -->
 		AND Shift = #{Shift}
 		AND SwipeCardTime is not NULL 
@@ -111,7 +111,7 @@
 	
 	<select id="selectOutWorkByCardID" parameterType='int'
 		resultType="int">
-		select count(*)  from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*)  from `testSwipeCardTime` where ID = #{Id} 
 	    <!-- 	AND WorkshopNo = #{WorkshopNo} -->
 		AND Shift = #{Shift}
 		AND SwipeCardTime is NULL and SwipeCardTime2 is not null
@@ -119,8 +119,8 @@
 	</select>	 
 	
 	<update id="updateOutWorkDSwipeTime" parameterType="User">
-    	update testSwipeCardTime set SwipeCardTime2 = #{SwipeCardTime2} 
-    	WHERE CardID = #{CardID} 
+    	update testSwipeCardTime set SwipeCardTime2 = #{SwipeCardTime2},CardID=#{CardID} 
+    	WHERE ID = #{Id} 
     	and Shift = #{Shift} 
     	<!-- AND WorkshopNo = #{WorkshopNo} -->
 		and <![CDATA[ date_format(SwipeCardTime,'%Y-%m-%d') = curdate()  ]]>
@@ -134,8 +134,8 @@
     </insert>
     
 	 <update id="updateOutWorkNSwipeTime" parameterType="User">
-    	update testSwipeCardTime set SwipeCardTime2 = #{SwipeCardTime2} 
-    	WHERE CardID = #{CardID} 
+    	update testSwipeCardTime set SwipeCardTime2 = #{SwipeCardTime2},CardID=#{CardID} 
+    	WHERE ID = #{Id} 
     	and Shift = #{Shift} 
     	<!-- AND WorkshopNo = #{WorkshopNo} -->
 		and <![CDATA[ date_format(SwipeCardTime,'%Y-%m-%d') = date_format(date_sub(#{SwipeCardTime2},interval 24 hour),'%Y-%m-%d')  ]]>
@@ -145,7 +145,7 @@
 		resultType="int">
 	   SELECT count(*) 
 	   FROM `testSwipeCardTime`
-	   WHERE CardID = #{CardID}
+	   WHERE ID = #{Id}
        and Date_format(swipecardtime, '%Y-%m-%d')=curdate() 
        AND swipecardtime > date_sub(#{SwipeCardTime},interval '9,60' MINUTE_SECOND)
 	</select>
@@ -154,7 +154,7 @@
 		resultType="int">
 	   SELECT count(*)
 	   FROM `testSwipeCardTime`
-	   WHERE CardID = #{CardID}
+	   WHERE ID = #{Id}
        and Date_format(swipecardtime2, '%Y-%m-%d')=curdate() 
        AND swipecardtime2 > date_sub(#{SwipeCardTime2},interval '9,60' MINUTE_SECOND)
 	</select>
@@ -269,7 +269,7 @@
 		PRIMARY_ITEM_NO=#{PRIMARY_ITEM_NO}
 		WHERE
 		<!-- PROD_LINE_CODE=#{PROD_LINE_CODE} and  -->
-		WorkshopNo=#{WorkshopNo} and
+		ID=#{Id} and
 		Name = #{Name}
 		AND swipecardtime <![CDATA[>curdate()]]>
 	</update>
@@ -322,7 +322,7 @@
     
     <select id="curDayGoWorkCardCount" parameterType="int"
 		resultType="int">
-		select count(*)  from `testSwipeCardTime` where CardID = #{CardID} 
+		select count(*)  from `testSwipeCardTime` where ID = #{Id} 
 		AND WorkshopNo = #{WorkshopNo}
 		 AND SwipeCardTime2 is NULL 
 		and <![CDATA[ SwipeCardTime > curdate() and SwipeCardTime < adddate(curdate(), '+1 days') ]]>
@@ -351,15 +351,15 @@
        FROM
         testswipecardtime 
        WHERE ((
-         DATE_FORMAT(swipecardtime, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
-         or DATE_FORMAT(swipecardtime2, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')-#{shiftDay}
+         (DATE_FORMAT(swipecardtime, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
+         or DATE_FORMAT(swipecardtime2, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d')-#{shiftDay})
          and shift='D')
          or(
          DATE_FORMAT(swipecardtime, '%Y%m%d') = DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
          and swipecardtime2 is null
          and shift='N'
          ))
-         AND CardID=#{cardID}
+         AND ID=#{id}
 	</select>
 
 	 <!-- Check Current Version in Database -->
@@ -382,14 +382,23 @@
             WHERE
             <![CDATA[ DATE_FORMAT(swipecardtime, '%Y%m%d') > DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
             AND DATE_FORMAT(swipecardtime, '%Y%m%d') < DATE_FORMAT(NOW(), '%Y%m%d') ]]>
-            AND CardID = #{cardID}) 
+            AND ID = #{Id}) 
 		  UNION
    			(SELECT recordid  FROM testswipecardtime 
            WHERE
            <![CDATA[ DATE_FORMAT(swipecardtime2, '%Y%m%d') > DATE_FORMAT(NOW(), '%Y%m%d') - #{shiftDay} 
            AND DATE_FORMAT(swipecardtime2, '%Y%m%d') < DATE_FORMAT(NOW(), '%Y%m%d')  ]]>
-           AND CardID = #{cardID})
+           AND ID = #{Id})
            ) c 
+   </select>
+   
+       <!-- Check Continues workers(N days) -->
+      <select id="getOneWeekWorkDays" parameterType="User" resultType="int">
+         SELECT count(*) FROM testswipecardtime where 
+         <![CDATA[
+           DATE_FORMAT(swipecardtime, '%Y%m%d') > DATE_FORMAT(NOW(), '%Y%m%d') - 7 
+           AND DATE_FORMAT(swipecardtime, '%Y%m%d') < DATE_FORMAT(NOW(), '%Y%m%d') ]]>
+           AND ID = #{Id}
    </select> 
     
    <!-- Check On Duty time is between Class on duty time - 15 mins  and Class on duty time -->

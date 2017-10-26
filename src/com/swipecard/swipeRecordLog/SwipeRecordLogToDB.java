@@ -116,24 +116,20 @@ public class SwipeRecordLogToDB {
 
 			} else {
 				//判斷該卡號是否已連續工作六天
-			//	if(!isUserContinuesWorkedOneWeek(session,CardID,WorkshopNo)){
-					//該卡號已連續工作六天，顯示錯誤訊息
-//					jtextT1_1.setText("工號："+eif.getId()+" 姓名："+eif.getName()+" 無連續上班七天！!\n");
-//					jtextT1_1.setBackground(Color.WHITE);
-//					System.out.println("Not Work");
+				if(!isUserContinuesWorkedOneWeek(session,eif,CardID,WorkshopNo,swipeCardTime)){					
 					
 					//該卡號是連續工作日小於六天
 					
-				String id = eif.getId();
+				String Id = eif.getId();
 				String name = eif.getName();
 				String RC_NO = "";
 				String PRIMARY_ITEM_NO = "";
 				 User curShiftUser = new User();
-				 curShiftUser.setId(id);
+				 curShiftUser.setId(Id);
 				 curShiftUser.setShiftDay(0);
 				     
 				 User yesShiftUser = new User();
-				 yesShiftUser.setId(id);
+				 yesShiftUser.setId(Id);
 				 yesShiftUser.setShiftDay(1);
 				    
 				 int empCurShiftCount =  session.selectOne("getShiftCount", curShiftUser);
@@ -160,7 +156,7 @@ public class SwipeRecordLogToDB {
 							String SwipeCardTime2 = swipeCardTime;
 							userNSwipe.setSwipeCardTime2(SwipeCardTime2);
 							userNSwipe.setCardID(CardID);
-							userNSwipe.setId(id);
+							userNSwipe.setId(Id);
 							userNSwipe.setName(name);
 							userNSwipe.setRC_NO(RC_NO);
 							userNSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
@@ -324,11 +320,11 @@ public class SwipeRecordLogToDB {
 				} else {
 					swipeCardRecord(session, eif, CardID, swipeCardTime, WorkshopNo);
 				}
-		//	}			
-			//else{
+			}			
+			else{
 			//該卡號已連續工作六天，顯示錯誤訊息
-			//	logger.info("工號："+eif.getId()+" 姓名："+eif.getName()+" 已連續上班七天，此次刷卡不列入記錄！!\n");				
-			//}
+				logger.info("工號："+eif.getId()+" 姓名："+eif.getName()+" 已連續上班七天，此次刷卡不列入記錄！!\n");				
+			}
 			}
 		} catch (Exception ex) {
 			logger.info("刷卡記錄回寫失敗！原因:" + ex);
@@ -345,9 +341,9 @@ public class SwipeRecordLogToDB {
 	public static void swipeCardRecord(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String WorkshopNo) {
 
-		String id = eif.getId();
+		String Id = eif.getId();
 		 User curShiftUser = new User();
-		  curShiftUser.setId(id);
+		  curShiftUser.setId(Id);
 		  curShiftUser.setShiftDay(0);
 		int empCurShiftCount =  session.selectOne("getShiftCount", curShiftUser);
 		if (empCurShiftCount == 0) {
@@ -371,6 +367,7 @@ public class SwipeRecordLogToDB {
 
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("CardID", CardID);
+			param.put("Id", Id);
 			param.put("WorkshopNo", WorkshopNo);
 			param.put("Shift", curShift);
 			param.put("SwipeCardTime", swipeCardTime);
@@ -398,6 +395,7 @@ public class SwipeRecordLogToDB {
 						String SwipeCardTime2 = swipeCardTime;
 						userSwipe.setSwipeCardTime2(SwipeCardTime2);
 						userSwipe.setCardID(CardID);
+						userSwipe.setId(Id);
 						userSwipe.setName(name);
 						userSwipe.setRC_NO(RC_NO);
 						userSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
@@ -453,10 +451,11 @@ public class SwipeRecordLogToDB {
 
 	public static void goOrOutWorkSwipeRecord(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String WorkshopNo, String curShift, String curClassDesc,Timestamp curClassStart) {
-		String id = eif.getId();
+		String Id = eif.getId();
 
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("CardID", CardID);
+		param.put("Id", Id);
 		param.put("WorkshopNo", WorkshopNo);
 		param.put("Shift", curShift);
 		param.put("SwipeCardTime", swipeCardTime);
@@ -481,7 +480,7 @@ public class SwipeRecordLogToDB {
 
 	public static void goWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String WorkshopNo, String curShift, String curClassDesc,Timestamp curClassStart) {
-		String id = eif.getId();
+		String Id = eif.getId();
 		String name = eif.getName();
 		String RC_NO = "";
 		String PRIMARY_ITEM_NO = "";
@@ -501,13 +500,13 @@ public class SwipeRecordLogToDB {
 						+ "\n刷卡時間： " + swipeCardTime + "\n" + "超出上班刷卡時間限制，請於上班前15分鐘刷卡！\n------------\n");
 			} else {
 				// 上刷時間介於班別15分鐘至班別起始時間，則進行記錄
-				logger.info("上班刷卡," + "ID: " + id + ",Name: " + eif.getName() + ",班別： " + curClassDesc + ",刷卡時間： "
+				logger.info("上班刷卡," + "ID: " + Id + ",Name: " + eif.getName() + ",班別： " + curClassDesc + ",刷卡時間： "
 						+ swipeCardTime + ",員工上班刷卡成功！");
 
 				User user1 = new User();
 				// String shift = "D";
 				user1.setCardID(CardID);
-				user1.setId(id);
+				user1.setId(Id);
 				user1.setName(name);
 				user1.setSwipeCardTime(swipeCardTime);
 				user1.setRC_NO(RC_NO);
@@ -526,8 +525,10 @@ public class SwipeRecordLogToDB {
 	public static void outWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String WorkshopNo, String Shift, String ClassDesc) {
 
+		String Id=eif.getId();
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("CardID", CardID);
+		param.put("Id", Id);
 		param.put("WorkshopNo", WorkshopNo);
 		param.put("Shift", Shift);
 		param.put("SwipeCardTime2", swipeCardTime);
@@ -550,6 +551,7 @@ public class SwipeRecordLogToDB {
 			User user1 = new User();
 			user1.setSwipeCardTime2(swipeCardTime);
 			user1.setCardID(CardID);
+			user1.setId(Id);
 			user1.setShift(Shift);
 			user1.setWorkshopNo(WorkshopNo);
 			session.update("updateOutWorkDSwipeTime", user1);
@@ -605,13 +607,130 @@ public class SwipeRecordLogToDB {
 		session.commit();
 	}
 	
-	private static boolean isUserContinuesWorkedOneWeek(SqlSession session,String CardID,String WorkshopNo){
-		boolean isContinuesWorkForAWeek=true;
+	private static boolean isUserContinuesWorkedOneWeek(SqlSession session, User eif,String cardID,String WorkshopNo,String swipeCardTime){
+		boolean isContinuesWorkForAWeek=false;
 		try{
 			//HashMap<String,Object> workDays=session.selectOne("getContinuesWorker",CardID);
 			//System.out.println("員工工作日:"+(long)workDays.get("work_count_week"));
 			//if((long)workDays.get("work_count_week")<6)
-			int workDays=session.selectOne("getContinuesWorker",CardID);
+			
+			//今天之前五天的记录，即:大于(new Date()-6 )  且小于new Date()
+		//	int workDays=session.selectOne("getContinuesWorker",CardID);
+			String Id=eif.getId();
+			int workDays=0;
+			User yesShiftUser = new User();
+			yesShiftUser.setId(Id);
+			yesShiftUser.setShiftDay(1);
+			
+			 User sixDayWorkerUser = new User();
+			 sixDayWorkerUser.setId(Id);
+			 sixDayWorkerUser.setShiftDay(7);
+			 
+			workDays=session.selectOne("getOneWeekWorkDays",sixDayWorkerUser);
+			  
+			int empYesShiftCount =  session.selectOne("getShiftCount", yesShiftUser);			
+			/*   			  								
+			//今天前六天的刷卡记录,即:new Date()-6
+			 User agoSevenDayShiftUser = new User();
+			 agoSevenDayShiftUser.setId(Id);
+			 agoSevenDayShiftUser.setShiftDay(7);
+			 
+			 User sevenDayWorkerUser = new User();
+			 sevenDayWorkerUser.setId(Id);
+			 sevenDayWorkerUser.setShiftDay(7);
+            
+			int agoSevenDayShiftCount =  session.selectOne("getShiftCount", agoSevenDayShiftUser);
+			if (agoSevenDayShiftCount > 0) {
+				User empSevenDayAgoUSer = (User) session.selectOne("getShiftByEmpId", agoSevenDayShiftUser);
+				String empSevenDayAgoShift=empSevenDayAgoUSer.getShift();
+				if(empSevenDayAgoShift.equals("N")){
+					//取得今天前，近五天的刷卡数量(包含new Date()-6 天夜班上下刷都完整的记录)
+					 
+					 User sixDayWorkerUser = new User();
+					 sixDayWorkerUser.setId(Id);
+					 sixDayWorkerUser.setShiftDay(6);
+					 
+					workDays=session.selectOne("getContinuesWorkDays",sixDayWorkerUser);
+					
+					//取得new Date()-6 天白班记录和夜班有上刷但下刷为null的记录
+					int sixDayAgoRecord=session.selectOne("getDayRecord",sixDayWorkerUser);
+					workDays+=sixDayAgoRecord;
+				}
+				else{
+					//取得今天前，近六天的刷卡数量					
+					workDays=session.selectOne("getContinuesWorkDays",sevenDayWorkerUser);
+				}
+			}else{
+				//取得今天前，近六天的刷卡数量
+				workDays=session.selectOne("getContinuesWorkDays",sevenDayWorkerUser);
+			}						
+			*/
+			if(empYesShiftCount>0){
+				User empYesUSer = (User) session.selectOne("getShiftByEmpId", yesShiftUser);
+	            String empYesShift=empYesUSer.getShift();
+				if(empYesShift.equals("N")){
+					String SwipeCardTime2 = swipeCardTime;
+					User userNSwipe = new User();
+					userNSwipe.setSwipeCardTime2(SwipeCardTime2);
+					userNSwipe.setCardID(cardID);
+					userNSwipe.setId(Id);
+					userNSwipe.setShift(empYesShift);
+					userNSwipe.setWorkshopNo(WorkshopNo);
+					int goWorkNCardCount =  session
+							.selectOne("selectGoWorkNByCardID", userNSwipe);//昨日夜班上刷记录
+									 
+					int yesterdaygoWorkCardCount =  session
+							.selectOne("selectCountNByCardID", userNSwipe);//昨日夜班下刷记录	
+					
+					if (goWorkNCardCount > 0) { 
+						// 昨日夜班已存在上刷						
+						if (yesterdaygoWorkCardCount==0) { //夜班下刷刷卡記錄不存在
+							Timestamp yesClassStart = empYesUSer.getClass_start();
+							Timestamp yesClassEnd = empYesUSer.getClass_end();
+							Timestamp goWorkSwipeTime = new Timestamp(new Date().getTime());
+
+							Calendar outWorkc = Calendar.getInstance();
+							outWorkc.setTime(yesClassEnd);
+							outWorkc.set(Calendar.HOUR_OF_DAY,
+								outWorkc.get(Calendar.HOUR_OF_DAY) + 3);
+							outWorkc.set(Calendar.MINUTE,
+								outWorkc.get(Calendar.MINUTE) + 30);
+							Date dt = outWorkc.getTime();
+							Timestamp afterClassEnd = new Timestamp(dt.getTime());
+							if (goWorkSwipeTime.before(afterClassEnd)) {
+							// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷							
+								workDays=workDays-1;
+							}
+							
+						}else{
+							
+							int isOutWorkSwipeDuplicate =  session
+									.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
+							if (isOutWorkSwipeDuplicate > 0) {
+								outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, WorkshopNo,
+										empYesShift);							
+								workDays=-1;
+							}
+						}
+					}else{ // 昨日夜班不存在上刷	
+
+						int outWorkNCardCount =  session
+								.selectOne("selectOutWorkByCardID", userNSwipe);//夜班昨天无上刷，今天有下刷
+						
+						if(outWorkNCardCount>0){
+							workDays=workDays+1;
+						}
+						int isOutWorkSwipeDuplicate =  session
+								.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
+						if (isOutWorkSwipeDuplicate > 0) {
+							outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, WorkshopNo,
+									empYesShift);
+							workDays=-1;
+						}
+					}
+				}
+			}
+			
 			System.out.println("員工工作日:"+workDays);
 			if(workDays<6)
 				isContinuesWorkForAWeek=false;
@@ -624,6 +743,7 @@ public class SwipeRecordLogToDB {
 		}
 		return isContinuesWorkForAWeek;
 	}
+
 	
 	/*當員工刷卡時，立即記錄一筆刷卡資料至raw_record table中
 	 * 
