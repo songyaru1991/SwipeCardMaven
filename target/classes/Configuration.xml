@@ -12,7 +12,7 @@
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">							
 				<property name="driver" value="com.mysql.jdbc.Driver" />
-				<property name="url" value="jdbc:mysql://192.168.78.153/swipecard?serverTimezone=UTC" /> 
+				<property name="url" value="jdbc:mysql://localhost/swipecard?serverTimezone=UTC" /> 
 				<property name="username" value="root" />
 				<property name="password" value="foxlink" />				
 				<property name="poolMaximumActiveConnections" value="5" />

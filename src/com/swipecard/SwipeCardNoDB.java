@@ -46,7 +46,7 @@ import com.swipecard.util.PingMySqlUtil;
 import com.swipecard.swipeRecordLog.SwipeRecordLogToDB;
 
 public class SwipeCardNoDB extends JFrame {
-	private final static String CurrentVersion="V20171018";
+	private final static String CurrentVersion="V20171101";
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
 	private int count = 0;
@@ -73,11 +73,13 @@ public class SwipeCardNoDB extends JFrame {
 	 */
 
 	protected class JLabelTimerTask extends TimerTask {
-		SimpleDateFormat dateFormatter = new SimpleDateFormat(DEFAULT_TIME_FORMAT);
 
 		@Override
 		public void run() {
-			time = dateFormatter.format(Calendar.getInstance().getTime());
+			SimpleDateFormat dateFormatter = new SimpleDateFormat(DEFAULT_TIME_FORMAT);
+			Date date = new Date();
+			//time = dateFormatter.format(Calendar.getInstance().getTime());
+			time = dateFormatter.format(date);
 			curTimeLable.setText(time);
 		}
 	}
@@ -87,7 +89,7 @@ public class SwipeCardNoDB extends JFrame {
 		@Override
 		public void run() {
 			PingMySqlUtil PingUtil = new PingMySqlUtil();
-		    String ipAddress = "192.168.78.153";
+		    String ipAddress = "10.72.0.179";
 	        try {
 				 // System.out.println(PingUtil.ping(ipAddress));
 				 // PingUtil.ping02(ipAddress);
@@ -163,7 +165,7 @@ public class SwipeCardNoDB extends JFrame {
 		tmr.scheduleAtFixedRate(new JLabelTimerTask(), new Date(), ONE_SECOND);
 
 	     final Timer checkDBLinktmr = new Timer();
-		checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),15 * 60 * 1000, 15 * 60 * 1000);
+		checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),5 * 60 * 1000, 5 * 60 * 1000);
 		
 		curTimeLable = new JLabel();
 		curTimeLable.setFont(new Font("微软雅黑", Font.BOLD, 35));

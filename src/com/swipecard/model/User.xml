@@ -396,8 +396,16 @@
       <select id="getOneWeekWorkDays" parameterType="User" resultType="int">
          SELECT count(*) FROM testswipecardtime where 
          <![CDATA[
-           DATE_FORMAT(swipecardtime, '%Y%m%d') > DATE_FORMAT(NOW(), '%Y%m%d') - 7 
-           AND DATE_FORMAT(swipecardtime, '%Y%m%d') < DATE_FORMAT(NOW(), '%Y%m%d') ]]>
+           DATE_FORMAT(swipecardtime, '%Y%m%d') >  CURDATE() - 7 
+           AND DATE_FORMAT(swipecardtime, '%Y%m%d') <  CURDATE() ]]>
+           AND ID = #{Id}
+   </select> 
+   
+         <select id="getTwoDayBeforWorkDays" parameterType="User" resultType="int">
+         SELECT count(*) FROM testswipecardtime where 
+         <![CDATA[
+           DATE_FORMAT(swipecardtime, '%Y%m%d') > CURDATE() - 8 
+           AND DATE_FORMAT(swipecardtime, '%Y%m%d') < CURDATE() - 1 ]]>
            AND ID = #{Id}
    </select> 
     
@@ -411,8 +419,15 @@
 		INSERT INTO `raw_record` (Id,CardID,SwipeCardTime,update_time)
 		VALUES
 		(#{Id},#{CardID}, #{SwipeCardTime},sysdate())
-     </insert>
-   
+   </insert>
+     
+   	<update id="updateRawRecordStatus" parameterType="User">
+    	update `raw_record` set record_status = #{record_status}
+    	WHERE ID = #{Id}
+    	and  CardID=#{CardID}
+		and SwipeCardTime = #{SwipeCardTime}
+    </update>
+    
 </mapper>  
 
 

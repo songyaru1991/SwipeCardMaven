@@ -7,7 +7,10 @@ import java.net.InetAddress;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
+
 public class PingMySqlUtil {
+	private static Logger logger = Logger.getLogger(PingMySqlUtil.class);
 	public static boolean ping(String ipAddress) throws Exception {
 		int timeOut = 3000; // 超时应该在3钞以上
 		boolean status = InetAddress.getByName(ipAddress).isReachable(timeOut); // 当返回值是true时，说明host是可用的，false则不可。
@@ -22,6 +25,7 @@ public class PingMySqlUtil {
 			while ((line = buf.readLine()) != null)
 				System.out.println(line);
 		} catch (Exception ex) {
+			logger.error("ping DB 異常"+ex);
 			System.out.println(ex.getMessage());
 		}
 	}
@@ -52,6 +56,7 @@ public class PingMySqlUtil {
 			try {
 				in.close();
 			} catch (IOException e) {
+				logger.error("ping DB 異常"+e);
 				e.printStackTrace();
 			}
 		}

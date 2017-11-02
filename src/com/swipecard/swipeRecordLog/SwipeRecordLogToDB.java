@@ -607,6 +607,29 @@ public class SwipeRecordLogToDB {
 		session.commit();
 	}
 	
+	/*當員工刷卡時，立即記錄一筆刷卡資料至raw_record table中
+	 * 
+	 * */
+	private static void addRawSwipeRecord(SqlSession session, User eif, String CardID,String WorkshopNo) {
+		String Id=null;
+		try {
+			String SwipeCardTime=DateGet.getTime();
+			if(eif!=null)
+				Id=eif.getId();
+			User newRawSwipeRecord=new User();
+			newRawSwipeRecord.setCardID(CardID);
+			newRawSwipeRecord.setId(Id);
+			newRawSwipeRecord.setSwipeCardTime(SwipeCardTime);
+			session.insert("addRawSwipeRecord", newRawSwipeRecord);
+			session.commit();
+		}
+		catch(Exception ex) {
+			logger.error("刷卡記錄回寫進原始數據表異常,原因:"+ex);
+			SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
+			ex.printStackTrace();
+		}
+	}
+	
 	private static boolean isUserContinuesWorkedOneWeek(SqlSession session, User eif,String cardID,String WorkshopNo,String swipeCardTime){
 		boolean isContinuesWorkForAWeek=false;
 		try{
@@ -684,7 +707,7 @@ public class SwipeRecordLogToDB {
 					
 					if (goWorkNCardCount > 0) { 
 						// 昨日夜班已存在上刷						
-						if (yesterdaygoWorkCardCount==0) { //夜班下刷刷卡記錄不存在
+						if (yesterdaygoWorkCardCount==0) { //夜班下刷刷卡??不存在
 							Timestamp yesClassStart = empYesUSer.getClass_start();
 							Timestamp yesClassEnd = empYesUSer.getClass_end();
 							Timestamp goWorkSwipeTime = new Timestamp(new Date().getTime());
@@ -698,7 +721,7 @@ public class SwipeRecordLogToDB {
 							Date dt = outWorkc.getTime();
 							Timestamp afterClassEnd = new Timestamp(dt.getTime());
 							if (goWorkSwipeTime.before(afterClassEnd)) {
-							// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷							
+							// 刷卡在夜班下班3.5小時之內,?為昨日夜班下刷							
 								workDays=workDays-1;
 							}
 							
@@ -707,8 +730,7 @@ public class SwipeRecordLogToDB {
 							int isOutWorkSwipeDuplicate =  session
 									.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
 							if (isOutWorkSwipeDuplicate > 0) {
-								outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, WorkshopNo,
-										empYesShift);							
+								outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime,WorkshopNo,empYesShift);
 								workDays=-1;
 							}
 						}
@@ -716,6 +738,7 @@ public class SwipeRecordLogToDB {
 
 						int outWorkNCardCount =  session
 								.selectOne("selectOutWorkByCardID", userNSwipe);//夜班昨天无上刷，今天有下刷
+									
 						
 						if(outWorkNCardCount>0){
 							workDays=workDays+1;
@@ -723,8 +746,7 @@ public class SwipeRecordLogToDB {
 						int isOutWorkSwipeDuplicate =  session
 								.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
 						if (isOutWorkSwipeDuplicate > 0) {
-							outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, WorkshopNo,
-									empYesShift);
+							outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime,WorkshopNo,empYesShift);
 							workDays=-1;
 						}
 					}
@@ -738,33 +760,11 @@ public class SwipeRecordLogToDB {
 				isContinuesWorkForAWeek=true;
 		}
 		catch(Exception ex){
+			logger.error("七休一異常："+ex);
 			SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 			ex.printStackTrace();
 		}
 		return isContinuesWorkForAWeek;
-	}
-
-	
-	/*當員工刷卡時，立即記錄一筆刷卡資料至raw_record table中
-	 * 
-	 * */
-	private static void addRawSwipeRecord(SqlSession session, User eif, String CardID,String WorkshopNo) {
-		String Id=null;
-		try {
-			String SwipeCardTime=DateGet.getTime();
-			if(eif!=null)
-				Id=eif.getId();
-			User newRawSwipeRecord=new User();
-			newRawSwipeRecord.setCardID(CardID);
-			newRawSwipeRecord.setId(Id);
-			newRawSwipeRecord.setSwipeCardTime(SwipeCardTime);
-			session.insert("addRawSwipeRecord", newRawSwipeRecord);
-			session.commit();
 		}
-		catch(Exception ex) {
-			SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
-			ex.printStackTrace();
-		}
-	}
 	
 }

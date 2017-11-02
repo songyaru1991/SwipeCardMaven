@@ -31,6 +31,7 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,7 +41,8 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.model.User;
 
 public class SwipeCardLogin extends JFrame {
-	private final static String CurrentVersion = "V20171018";
+	private final static String CurrentVersion = "V20171101";
+	private static Logger logger = Logger.getLogger(SwipeCardLogin.class);
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	static {
@@ -56,6 +58,7 @@ public class SwipeCardLogin extends JFrame {
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 			// System.out.println("sqlSessionFactory:"+sqlSessionFactory);
 		} catch (Exception e) {
+			logger.error("Login時 Error building SqlSession，原因:"+e);
 			// e.printStackTrace();
 			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error building SqlSession.", e);
@@ -178,6 +181,7 @@ public class SwipeCardLogin extends JFrame {
 			}
 		} catch (Exception e) {
 			System.out.println("Error opening session");
+			logger.error("取得車間異常,原因"+e);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
@@ -207,6 +211,7 @@ public class SwipeCardLogin extends JFrame {
 			}
 		} catch (Exception e) {
 			System.out.println("Error opening session");
+			logger.error("取得管理員卡號異常，原因:"+e);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);

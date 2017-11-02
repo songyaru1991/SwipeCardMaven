@@ -26,6 +26,7 @@ public class User {
 	private String SwipeCardTime2;
 	private String Shift;
 	private String curDateTime;
+	private String record_status;
 	
 	//Table:lost_employee
 	private String SwipeDate;
@@ -226,6 +227,14 @@ public class User {
 
 	public void setShiftDay(int shiftDay) {
 		this.shiftDay = shiftDay;
+	}
+
+	public String getRecord_status() {
+		return record_status;
+	}
+
+	public void setRecord_status(String record_status) {
+		this.record_status = record_status;
 	}
 
 }
