@@ -396,7 +396,7 @@
       <select id="getOneWeekWorkDays" parameterType="User" resultType="int">
          SELECT count(*) FROM testswipecardtime where 
          <![CDATA[
-           DATE_FORMAT(swipecardtime, '%Y%m%d') >  CURDATE() - 7 
+           DATE_FORMAT(swipecardtime, '%Y%m%d') >  DATE_SUB(curdate(),INTERVAL 7 DAY) 
            AND DATE_FORMAT(swipecardtime, '%Y%m%d') <  CURDATE() ]]>
            AND ID = #{Id}
    </select> 
@@ -404,8 +404,8 @@
          <select id="getTwoDayBeforWorkDays" parameterType="User" resultType="int">
          SELECT count(*) FROM testswipecardtime where 
          <![CDATA[
-           DATE_FORMAT(swipecardtime, '%Y%m%d') > CURDATE() - 8 
-           AND DATE_FORMAT(swipecardtime, '%Y%m%d') < CURDATE() - 1 ]]>
+           DATE_FORMAT(swipecardtime, '%Y%m%d') > DATE_SUB(curdate(),INTERVAL 8 DAY) 
+           AND DATE_FORMAT(swipecardtime, '%Y%m%d') < DATE_SUB(curdate(),INTERVAL 1 DAY) ]]>
            AND ID = #{Id}
    </select> 
     
@@ -423,9 +423,14 @@
      
    	<update id="updateRawRecordStatus" parameterType="User">
     	update `raw_record` set record_status = #{record_status}
-    	WHERE ID = #{Id}
-    	and  CardID=#{CardID}
-		and SwipeCardTime = #{SwipeCardTime}
+    	WHERE CardID=#{CardID}
+		and DATE_FORMAT(swipecardtime, '%Y-%m-%d %H:%i:%S') = #{SwipeCardTime}
+		<if test="Id!=null">
+		    and ID = #{Id}
+		</if>
+		<if test="Id==null">
+		    and ID is null
+		</if>
     </update>
     
 </mapper>  

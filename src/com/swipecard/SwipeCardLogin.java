@@ -41,7 +41,7 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.model.User;
 
 public class SwipeCardLogin extends JFrame {
-	private final static String CurrentVersion = "V20171101";
+	private final static String CurrentVersion = "V20171103";
 	private static Logger logger = Logger.getLogger(SwipeCardLogin.class);
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;

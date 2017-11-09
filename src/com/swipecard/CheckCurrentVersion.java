@@ -91,7 +91,7 @@ public class CheckCurrentVersion implements Runnable {
 					if ((currentHour >= 9 && currentHour < 12) || (currentHour >= 14 && currentHour < 17)
 							|| (currentHour >= 21 && currentHour < 24) || (currentHour >= 1 && currentHour < 7)) {
 						int dialogResult = JOptionPane.showConfirmDialog(null,
-								"本地端程序為舊版本，點選「確認」後立即自動關閉\n關閉後請重新開啟刷卡端程式，程序會自動更新並重新啟動\n", "程序版本警告",
+								"本地端程序為舊版本，點選「確認」關閉\n關閉後請重新開啟刷卡端程式\n", "程序版本警告",
 								JOptionPane.DEFAULT_OPTION);
 						System.exit(0);
 					}

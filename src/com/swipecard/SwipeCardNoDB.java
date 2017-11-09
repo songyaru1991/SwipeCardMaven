@@ -46,7 +46,7 @@ import com.swipecard.util.PingMySqlUtil;
 import com.swipecard.swipeRecordLog.SwipeRecordLogToDB;
 
 public class SwipeCardNoDB extends JFrame {
-	private final static String CurrentVersion="V20171101";
+	private final static String CurrentVersion="V20171103";
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
 	private int count = 0;
@@ -89,7 +89,7 @@ public class SwipeCardNoDB extends JFrame {
 		@Override
 		public void run() {
 			PingMySqlUtil PingUtil = new PingMySqlUtil();
-		    String ipAddress = "10.72.0.179";
+		    String ipAddress = "10.72.0.221";
 	        try {
 				 // System.out.println(PingUtil.ping(ipAddress));
 				 // PingUtil.ping02(ipAddress);

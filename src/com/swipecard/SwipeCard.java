@@ -58,7 +58,7 @@ import com.swipecard.model.User;
 
 
 public class SwipeCard extends JFrame {
-	private final static String CurrentVersion="V20171101";
+	private final static String CurrentVersion="V20171103";
 	private static Logger logger = Logger.getLogger(SwipeCard.class);
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
@@ -575,7 +575,7 @@ public class SwipeCard extends JFrame {
 				// 驗證是否為10位整數，是則繼續執行，否則提示
 				// System.out.println(m.matches());
 				if (CardID.length() > 10) {
-					jtextT1_1.setBackground(Color.WHITE);
+					jtextT1_1.setBackground(Color.RED);
 					jtextT1_1.setText("卡號輸入有誤，請再次刷卡\n");
 					textT1_3.setText("");
 				} else {
@@ -598,12 +598,21 @@ public class SwipeCard extends JFrame {
 								User selEmp = new User();
 								selEmp.setCardID(CardID);
 								selEmp.setSwipeDate(swipeDate);
-								int lostRows = session.selectOne("selectLoseEmployee", selEmp);				
+								int lostRows = session.selectOne("selectLoseEmployee", selEmp);	
+								User user1 = new User();								
+								user1.setCardID(CardID);
+								user1.setWorkshopNo(WorkshopNo);
+								user1.setSwipeDate(swipeDate);
+								user1.setSwipeCardTime(swipeCardTime);
+								user1.setRecord_status("1");
+								
 								if (lostRows > 0) {
 									// JOptionPane.showMessageDialog(null,"已記錄當前異常刷卡人員，今天不用再次刷卡！");
 									jtextT1_1.setText("已記錄當前異常刷卡人員，今天不用再次刷卡！\n");
 									jtextT1_1.setBackground(Color.RED);
-									textT1_3.setText("");
+									textT1_3.setText("");								
+									session.update("updateRawRecordStatus",user1);
+									session.commit();
 									return;
 								}
 								/*
@@ -612,19 +621,14 @@ public class SwipeCard extends JFrame {
 								 * );
 								 */
 								jtextT1_1.setText("當前刷卡人員不存在；可能是新進人員，或是舊卡丟失補辦，人員資料暫時未更新，請線長記錄，協助助理走原有簽核流程！\n");
-								jtextT1_1.setBackground(Color.RED);
-								User user1 = new User();
-								user1.setCardID(CardID);
-								user1.setWorkshopNo(WorkshopNo);
-								user1.setSwipeDate(swipeDate);
-								user1.setSwipeCardTime(swipeCardTime);
-								user1.setRecord_status("1");
+								jtextT1_1.setBackground(Color.RED);								
 								session.insert("insertUserByNoCard", user1);
 								session.update("updateRawRecordStatus",user1);
 								session.commit();
 
 							} else {
 								String name = eif.getName();
+								//String costId=
 								String RC_NO = jtf.getText();
 								String PRIMARY_ITEM_NO = textT2_1.getText();
 								String Id = eif.getId();						
@@ -801,7 +805,7 @@ public class SwipeCard extends JFrame {
 								}
 								else{
 									//該卡號已連續工作六天，顯示錯誤訊息
-									jtextT1_1.append("工號："+eif.getId()+" 姓名："+eif.getName()+" 已連續上班七天，此次刷卡不列入記錄！!\n");
+									jtextT1_1.append("工號："+eif.getId()+" 姓名："+eif.getName()+" 已連續上班六天，此次刷卡不列入記錄！!\n");
 									jtextT1_1.setBackground(Color.RED);
 									User user1 = new User();
 									user1.setCardID(CardID);
@@ -934,7 +938,7 @@ public class SwipeCard extends JFrame {
 									session.insert("insertOutWorkSwipeTime", userSwipe);
 									session.commit();
 								} else {
-									jtextT1_1.setBackground(Color.WHITE);
+									jtextT1_1.setBackground(Color.red);
 									jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n"
 											+ "今日上下班卡已刷，此次刷卡無效！\n");
 									User user1 = new User();
@@ -1094,7 +1098,7 @@ public class SwipeCard extends JFrame {
 				outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, Shift);
 
 			} else {
-				jtextT1_1.setBackground(Color.WHITE);
+				jtextT1_1.setBackground(Color.red);
 				jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n" + "今日上下班卡已刷，此次刷卡無效！\n");
 				User user1 = new User();
 				user1.setCardID(CardID);
@@ -1122,12 +1126,14 @@ public class SwipeCard extends JFrame {
 	public void outWorkNSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String yesterdayShift, String yesterdayClassDesc) 
 	{
 		String Id=eif.getId();
+		String name=eif.getName();
 		String WorkshopNo = workShopNoJlabel.getText();
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
 		User userNSwipe = new User();
 		String SwipeCardTime2 = swipeCardTime;														
 		userNSwipe.setId(Id);
+		userNSwipe.setName(name);
 		userNSwipe.setCardID(CardID);
 		userNSwipe.setSwipeCardTime2(SwipeCardTime2);
 		userNSwipe.setRC_NO(RC_NO);
@@ -1149,7 +1155,7 @@ public class SwipeCard extends JFrame {
 				outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, yesterdayShift);
 
 			} else {
-				jtextT1_1.setBackground(Color.WHITE);
+				jtextT1_1.setBackground(Color.red);
 				jtextT1_1.append("ID: " + eif.getId() + " Name: "
 						+ eif.getName() + "\n" + "今日上下班卡已刷，此次刷卡無效！\n");
 				User user1 = new User();
@@ -1186,7 +1192,7 @@ public class SwipeCard extends JFrame {
 								userNSwipe);
 					} else {
 						//無上刷有下刷
-						jtextT1_1.setBackground(Color.WHITE);
+						jtextT1_1.setBackground(Color.red);
 						jtextT1_1.append("ID: " + eif.getId() + " Name: "
 								+ eif.getName() + "\n"
 								+ "今日上下班卡已刷，此次刷卡無效！\n");
@@ -1460,9 +1466,7 @@ public class SwipeCard extends JFrame {
 			 * sevenDayWorkerUser); }
 			 */
 						
-			if (empYesShiftCount > 0 && empCurShiftCount>0) {
-				User curYesUSer = (User) session.selectOne("getShiftByEmpId", curShiftUser);
-				String empCurShift=curYesUSer.getShift();
+			if (empYesShiftCount > 0) {				
 				
 				User empYesUSer = (User) session.selectOne("getShiftByEmpId", yesShiftUser);
 				String empYesShift = empYesUSer.getShift();
@@ -1506,6 +1510,9 @@ public class SwipeCard extends JFrame {
 							}
 						}
 					} else { // 昨日夜班不存在上刷
+						if (empCurShiftCount>0) {
+							User curYesUSer = (User) session.selectOne("getShiftByEmpId", curShiftUser);
+							String empCurShift=curYesUSer.getShift();
 						if (empCurShift.equals("N")) {
 							if (goWorkSwipeTime.getHours() <= 12) {
 								// 刷卡在12點前的,記為昨日夜班下刷
@@ -1527,7 +1534,8 @@ public class SwipeCard extends JFrame {
 									workDays = twoDayBeforworkDays;
 								}
 							}
-						}						
+						}
+					  }
 					}
 				}
 			}
