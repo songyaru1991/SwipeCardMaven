@@ -14,11 +14,12 @@ import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+import org.apache.log4j.Logger;
 
 import com.swipecard.model.User;
 
 public class MyNewTableModel extends AbstractTableModel {
-
+	private static Logger logger = Logger.getLogger(MyNewTableModel.class);
 	/** * @author paul */
 	private Vector<Object> TableData;// 用来存放表格数据的线性表
 	// private Vector TableTitle;// 表格的 列标题
@@ -33,6 +34,7 @@ public class MyNewTableModel extends AbstractTableModel {
 			 */
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
+			logger.error("綁定指示單號時Error building SqlSession，原因:"+e);
 			e.printStackTrace();
 		}
 	}

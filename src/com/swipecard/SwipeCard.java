@@ -55,6 +55,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.log4j.Logger;
 
 import com.swipecard.model.User;
+import com.swipecard.util.JsonFileUtil;
 
 
 public class SwipeCard extends JFrame {
@@ -66,7 +67,7 @@ public class SwipeCard extends JFrame {
 	private int count = 0;
 	private String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private String time;
-	private int ONE_SECOND = 1000;
+	private int ONE_SECOND = 1000;	
 
 	static JTabbedPane tabbedPane;
 	static JLabel label1, label3, swipeTimeLable, curTimeLable;
@@ -85,7 +86,8 @@ public class SwipeCard extends JFrame {
 	private MyNewTableModel myModel;
 	private JTable mytable;
 	Textc textc = null;
-
+	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
+	final static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 	static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	static {
@@ -99,7 +101,8 @@ public class SwipeCard extends JFrame {
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
 			logger.error("Error opening session:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(null);
+			
+			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		}
 	}
@@ -531,7 +534,7 @@ public class SwipeCard extends JFrame {
 					// System.out.println("State!"+ mytable.getColumnClass(0));
 				} catch (Exception e1) {					
 					System.out.println("Error opening session");
-					logger.error(e1);
+					logger.error("綁定指示單號失敗,原因:"+e1);
 					dispose();
 					SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 					throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
@@ -1321,7 +1324,7 @@ public class SwipeCard extends JFrame {
 			System.out.println("Error opening session");
 			logger.error("取得指示單號異常:"+e1);
 			dispose();
-			SwipeCardNoDB d = new SwipeCardNoDB(null);
+			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
 		} finally {
 			ErrorContext.instance().reset();
