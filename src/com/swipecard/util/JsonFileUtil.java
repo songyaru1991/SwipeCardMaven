@@ -23,11 +23,11 @@ public class JsonFileUtil {
 	  static JsonFileUtil jsonFileUtil = new JsonFileUtil();
 	  static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 
-	public static boolean createJsonFile(String jsonString, String fileName) {
+	public static boolean createWorkshopNoJsonFile(String jsonString, String fileName) {
 		boolean flag = true;
 		// File.separator如果文件路径考虑跨平台,将分隔符用File.separator 代替
 		// String filePath = System.getProperty("user.dir");
-		String filePath = "D:/swipeCard/logs/";
+		String filePath = "D:/SwipeCard/logs/";
 		String WorkshopNoSavePath = filePath + fileName;
 		try {
 			File file = new File(WorkshopNoSavePath);
@@ -47,7 +47,7 @@ public class JsonFileUtil {
 			write.close();
 		} catch (Exception e) {
 			flag = false;
-			logger.error("createJsonFile時 Error building SqlSession，原因:"+e);
+			logger.error("createJsonFile時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		}
@@ -55,7 +55,7 @@ public class JsonFileUtil {
 	}
 
 	public Object[] getWorkshopNoByJson() {
-		String filePath = "D:/swipeCard/logs/";
+		String filePath = "D:/SwipeCard/logs/";
 		String fileName = "WorkshopNo.json";
 		String workshopNoSavePath = filePath + fileName;
 		File file = new File(workshopNoSavePath);
@@ -89,17 +89,17 @@ public class JsonFileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
+			logger.error("getWorkshopNoByJson時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
+			logger.error("getWorkshopNoByJson時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
+			logger.error("getWorkshopNoByJson時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
@@ -114,45 +114,38 @@ public class JsonFileUtil {
 		return a;
 	}
 	
-	public JSONObject getSwipeCardRecordByJson() {
-		String filePath = "D:/swipeCard/logs/";
-		String fileName = "swipeCardRecord" + DateGet.getDate() + ".json";
-		String swipeCardRecordPath = filePath + fileName;
-		File file = new File(swipeCardRecordPath);
+	public JSONObject getSwipeCardRecordByJson(File swipeCardRecordFile) {
 
 		BufferedReader brRread = null;
 		String swipeCardRecordStr = "";
-		JSONObject swipeCardRecordJson = null;	
+		JSONObject swipeCardRecordJson = null;
 		try {
-			if (!file.exists()) {
+			if (!swipeCardRecordFile.exists()) {
 				System.out.println("本地log無刷卡記錄!");
 			} else {
-				InputStreamReader streamReader = new InputStreamReader(new FileInputStream(file), "gbk");
-				 brRread = new BufferedReader(streamReader);
+				InputStreamReader streamReader = new InputStreamReader(new FileInputStream(swipeCardRecordFile), "gbk");
+				brRread = new BufferedReader(streamReader);
 				String tempString = null;
 				while ((tempString = brRread.readLine()) != null) {
 					swipeCardRecordStr += tempString;
 				}
 				swipeCardRecordJson = new JSONObject(swipeCardRecordStr);
-							
+
 				brRread.close();
-				
-			//	file.renameTo(new File(filePath+"swipeCardRecord" + DateGet.getDate()+"_"+new Date().getHours() + ".json"));  
-				
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);			
+			logger.error("getSwipeCardRecordByJson時 Error，原因:" + e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);
+			logger.error("getSwipeCardRecordByJson時 Error，原因:" + e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);
+			logger.error("getSwipeCardRecordByJson時 Error，原因:" + e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
@@ -166,24 +159,54 @@ public class JsonFileUtil {
 		}
 		return swipeCardRecordJson;
 	}
-	
+
+	public Boolean changeSwipeRecordFileName(File swipeCardRecordFile) {
+		boolean flag = true;
+		try {
+			String writtedBackDbfilePath = "D:/SwipeCard/logs/WritedBackDbLogs/";
+
+			File writtedBackDbfile = new File(writtedBackDbfilePath);
+			if (!writtedBackDbfile.exists()) {
+				writtedBackDbfile.mkdirs();
+			}
+
+			String swipeCardLogfileName = swipeCardRecordFile.getName();
+			String writtedBackDbfileName = swipeCardLogfileName.substring(0, swipeCardLogfileName.indexOf("."))
+					+ DateGet.getHHMM() + ".json";
+			flag = swipeCardRecordFile.renameTo(new File(writtedBackDbfilePath + writtedBackDbfileName));
+			if (flag) {
+				logger.info("修改回写过得刷卡记录" + swipeCardLogfileName + "文件名称 成功");
+				System.out.println("修改回写过得刷卡记录" + swipeCardLogfileName + "文件名称 成功");
+			} else {
+				logger.error("修改回写过得刷卡记录" + swipeCardLogfileName + "文件名称 失败");
+				System.out.println("修改回写过得刷卡记录" + swipeCardLogfileName + "文件名称 失败");
+			}
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			logger.error("修改回写过得刷卡记录log文件名称异常，原因:" + e);
+			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			e.printStackTrace();
+		}
+		return flag;
+	}
+
 	public static boolean saveSelectWorkshopNo(String jsonString, String fileName) {
 		boolean flag = true;
 		// File.separator如果文件路径考虑跨平台,将分隔符用File.separator 代替
 		// String filePath = System.getProperty("user.dir");
-		String filePath = "D:/swipeCard/logs/";
+		String filePath = "D:/SwipeCard/logs/";
 		String WorkshopNoSavePath = filePath + fileName;
 		try {
 			File file = new File(WorkshopNoSavePath);
 			if (!file.getParentFile().exists()) { // 如果父目录不存在，创建父目录
 				file.getParentFile().mkdirs();
 			}
-			if (file.exists()) { // 如果已存在,删除旧文件
+			if (file.exists()) { 
 				file.delete();
 			}
 			file.createNewFile();
 
-			//jsonString = JsonFormatTool.formatJson(jsonString);
+			// jsonString = JsonFormatTool.formatJson(jsonString);
 
 			Writer write = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
 			write.write(jsonString);
@@ -191,7 +214,7 @@ public class JsonFileUtil {
 			write.close();
 		} catch (Exception e) {
 			flag = false;
-			logger.error("saveSelectWorkshopNo時 Error building SqlSession，原因:"+e);
+			logger.error("saveSelectWorkshopNo時 Error，原因:" + e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		}
@@ -199,7 +222,7 @@ public class JsonFileUtil {
 	}
 
 	public String getSaveWorkshopNo() {
-		String filePath = "D:/swipeCard/logs/";
+		String filePath = "D:/SwipeCard/logs/";
 		String fileName = "saveSelectWorkshopNo.json";
 		String saveWorkshopNoPath = filePath + fileName;
 		File file = new File(saveWorkshopNoPath);
@@ -226,17 +249,17 @@ public class JsonFileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("saveSelectWorkshopNo時 Error building SqlSession，原因:"+e);
+			logger.error("saveSelectWorkshopNo時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
+			logger.error("getSaveWorkshopNo時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
+			logger.error("getSaveWorkshopNo時 Error，原因:"+e);
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
@@ -244,7 +267,7 @@ public class JsonFileUtil {
 				try {
 					brRread.close();
 				} catch (IOException e) {
-					logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
+					logger.error("getSaveWorkshopNo時 Error，原因:"+e);
 					// e.printStackTrace();
 					SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 					e.printStackTrace();

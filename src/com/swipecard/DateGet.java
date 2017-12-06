@@ -16,10 +16,16 @@ public class DateGet {
 		return ti;
 	}
 	
+	public static String getHHMM(){
+		SimpleDateFormat df = new SimpleDateFormat("-HH-mm");
+		String ti  = df.format(new Date());
+		return ti;
+	}
+	
 	public static String changeTime(Date Time) {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String ti = df.format(Time);
 		return ti;
 	}
-
+	
 }

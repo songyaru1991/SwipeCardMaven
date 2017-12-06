@@ -15,7 +15,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Timer;
@@ -46,8 +45,9 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.util.PingMySqlUtil;
 import com.swipecard.swipeRecordLog.SwipeRecordLogToDB;
 
+@SuppressWarnings("serial")
 public class SwipeCardNoDB extends JFrame {	
-	private final static String CurrentVersion="V20171103";
+	private final static String CurrentVersion="V20171127";//通訊的打包時不卡七休一，零組件的打包卡七休一
 	private static Logger logger = Logger.getLogger(SwipeCardNoDB.class);
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
@@ -91,7 +91,7 @@ public class SwipeCardNoDB extends JFrame {
 		@Override
 		public void run() {
 			PingMySqlUtil PingUtil = new PingMySqlUtil();
-		    String ipAddress = "10.72.0.221";
+		    String ipAddress = "192.168.60.111";
 	        try {
 				 // System.out.println(PingUtil.ping(ipAddress));
 				 // PingUtil.ping02(ipAddress);
@@ -101,11 +101,10 @@ public class SwipeCardNoDB extends JFrame {
 			        String selectWorkShopNo = jtf1.getText();
 					if(PingUtil.ping(ipAddress, 5, 5000))
 					{
-						//暂时不启用无网络刷卡记录回写DB模式
-					//	SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
-					//	logToDB.SwipeRecordLogToDB();
-						dispose();
 						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+						SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
+						logToDB.SwipeRecordLogToDB();
+						dispose();
 					    this.cancel();
 					}
 					
@@ -162,13 +161,7 @@ public class SwipeCardNoDB extends JFrame {
 			comboBox1.setSelectedItem(workshopNoWithDB);
 		}
 
-		jtf1 = (JTextField) comboBox1.getEditor().getEditorComponent();
-
-		 Timer tmr = new Timer();
-		tmr.scheduleAtFixedRate(new JLabelTimerTask(), new Date(), ONE_SECOND);
-
-	     final Timer checkDBLinktmr = new Timer();
-		checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),5 * 60 * 1000, 5 * 60 * 1000);
+		jtf1 = (JTextField) comboBox1.getEditor().getEditorComponent();		
 		
 		curTimeLable = new JLabel();
 		curTimeLable.setFont(new Font("微软雅黑", Font.BOLD, 35));
@@ -238,6 +231,12 @@ public class SwipeCardNoDB extends JFrame {
 
 		panel1.add(butT1_5);
 		panel1.add(butT1_6);
+		
+		 Timer tmr = new Timer();
+		tmr.scheduleAtFixedRate(new JLabelTimerTask(), new Date(), ONE_SECOND);
+
+		 final Timer checkDBLinktmr = new Timer();
+	     checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),5 * 60 * 1000, 5 * 60 * 1000);
 
 		butT1_5.addActionListener(new ActionListener() {
 
@@ -289,7 +288,7 @@ public class SwipeCardNoDB extends JFrame {
 							swipeTimeLable.setText(swipeCardTime);
 							swipeCardRecord.put("WorkshopNo", selectWorkShopNo);
 							// String filePath = System.getProperty("user.dir");
-							String filePath = "D:/swipecard/logs/";
+							String filePath = "D:/SwipeCard/logs/SwipeCardRecordLogs/";
 							String fileName = "swipeCardRecord" + DateGet.getDate() + ".json";
 							String swipeCardRecordSavePath = filePath + fileName;
 							File file = new File(swipeCardRecordSavePath);
@@ -329,8 +328,7 @@ public class SwipeCardNoDB extends JFrame {
 								bw.write(swipeCardRecord.toString());
 								bw.flush();
 								br.close();
-								// System.out.println("swipeCardRecord:" +
-								// swipeCardRecord);
+								
 							}
 							jtextT1_1.setBackground(Color.WHITE);
 							jtextT1_1.setText("卡號為:" + CardID + "的員工\n" + swipeCardTime + "刷卡成功！\n");
@@ -381,5 +379,5 @@ public class SwipeCardNoDB extends JFrame {
 		final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 		SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 	}
-
+	
 }

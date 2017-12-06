@@ -1,14 +1,11 @@
 package com.swipecard;
 
 import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.util.Enumeration;
 import java.util.List;
@@ -36,12 +33,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.swipecard.util.FrameShowUtil;
 import com.swipecard.util.JsonFileUtil;
 import com.swipecard.model.User;
 
 public class SwipeCardLogin extends JFrame {
-	private final static String CurrentVersion = "V20171103";
+	private final static String CurrentVersion = "V20171127";//通訊的打包時不卡七休一，零組件的打包卡七休一
 	private static Logger logger = Logger.getLogger(SwipeCardLogin.class);
 	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
 	final static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
@@ -174,7 +170,7 @@ public class SwipeCardLogin extends JFrame {
 					workshopNoArray.put(workshopNoJson);
 				}
 				String fileName = "WorkshopNo.json";
-				jsonFileUtil.createJsonFile(workshopNoArray.toString(), fileName);
+				jsonFileUtil.createWorkshopNoJsonFile(workshopNoArray.toString(), fileName);
 			} else {
 				a = new Object[1];
 				a[0] = "--請選擇車間--";
