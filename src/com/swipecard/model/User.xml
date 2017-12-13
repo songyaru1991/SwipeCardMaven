@@ -433,6 +433,13 @@
 		</if>
     </update>
     
+    <select id="isAdminByCardID" parameterType="int" resultType="int">
+    	select count(*) from testemployee where
+    	 cardid=#{cardid} 
+    	 and Permission=1 
+    	 and isOnWork=0;
+    </select>
+    
 </mapper>  
 
 

@@ -41,10 +41,10 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.model.User;
 
 public class SwipeCardLogin extends JFrame {
-	private final static String CurrentVersion = "V20171103";
+	private final static String CurrentVersion = "V20171127";
 	private static Logger logger = Logger.getLogger(SwipeCardLogin.class);
 	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
-	final static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
+	final  String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	static {
@@ -61,8 +61,8 @@ public class SwipeCardLogin extends JFrame {
 			// System.out.println("sqlSessionFactory:"+sqlSessionFactory);
 		} catch (Exception e) {
 			logger.error("Login時 Error building SqlSession，原因:"+e);
-			// e.printStackTrace();
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+//			 e.printStackTrace();
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error building SqlSession.", e);
 		}
 	}
@@ -104,6 +104,7 @@ public class SwipeCardLogin extends JFrame {
 
 		jtf1 = (JTextField) comboBox1.getEditor().getEditorComponent();
 		
+		//如果有默认
 		if (defaultWorkshopNo != null) {
 			comboBox1.setSelectedItem(defaultWorkshopNo);
 		}
@@ -117,11 +118,16 @@ public class SwipeCardLogin extends JFrame {
 
 		label3.setBounds(120, 120, 100, 30);
 		comboBox1.setBounds(220, 120, 160, 40);
-
+		
+		if(defaultWorkshopNo == null || defaultWorkshopNo.equals("")){
+			panel1.add(label2);
+			panel1.add(text1);
+		}
+		
 		panel1.add(label1);
-		panel1.add(label2);
+		
 		panel1.add(label3);
-		panel1.add(text1);
+		
 		panel1.add(but1);
 		panel1.add(comboBox1);
 		c.add(panel1);
@@ -154,7 +160,10 @@ public class SwipeCardLogin extends JFrame {
 			}
 		});
 	}
-
+	/**
+	 * 获取comboBox1下拉选项的菜单
+	 * @return
+	 */
 	@SuppressWarnings("unchecked")
 	public Object[] getWorkshopNo() {// TODO
 		List<User> user;
@@ -190,7 +199,9 @@ public class SwipeCardLogin extends JFrame {
 		}
 		return a;
 	}
-
+	/*
+	 * 获取一个LineLeader数组
+	 */
 	@SuppressWarnings("rawtypes")
 	public Object[] getLineLeader() {
 		// TODO
@@ -225,12 +236,15 @@ public class SwipeCardLogin extends JFrame {
 		InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18));
 		SwipeCardLogin d = new SwipeCardLogin();
 
-		CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
+		/*l
+		 * CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
 		Thread executeCheckVersion = new Thread(chkVersion);
-		executeCheckVersion.start();
+		executeCheckVersion.start();*/
 
 	}
-
+	/*
+	 * 初始化全局font
+	 */
 	private static void InitGlobalFont(Font font) {
 		FontUIResource fontRes = new FontUIResource(font);
 		for (Enumeration<Object> keys = UIManager.getDefaults().keys(); keys.hasMoreElements();) {
@@ -294,47 +308,101 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		try {
-			char[] pass = adaptee.text1.getPassword();
-			String CardID = new String(pass);
-			System.out.println("CardID: " + CardID);
-			String pattern = "^[0-9]\\d{9}$";
-			Pattern r = Pattern.compile(pattern, Pattern.DOTALL);
-			Matcher m = r.matcher(CardID);
-			// String WorkshopNo = SwipeCardLogin.jtf1.getText();
-			String selectWorkShopNo = adaptee.comboBox1.getSelectedItem().toString();
-			if (selectWorkShopNo.equals("--請選擇車間--")) {
-				JOptionPane.showMessageDialog(adaptee, "請選擇車間!");
-			} else {
-				if (m.matches() == true) {
-					Object[] a = adaptee.LineLeader;
-					/*
-					 * if(ShiftName.equals("日班")){ Shift="D"; }else
-					 * if(ShiftName.equals("夜班")){ Shift="N"; }
-					 */
-					if (isHave(a, CardID)) {// 调用自己定义的函数isHave，如果包含则返回true,否则返回false
-						System.out.println("成功登陸！");
-						JsonFileUtil jsonFileUtil = new JsonFileUtil();
-						String fileName = "saveSelectWorkshopNo.json";
-						JSONObject selectWorkshopNoJson = new JSONObject();
-						selectWorkshopNoJson.put("workshopNo", selectWorkShopNo);
-						jsonFileUtil.saveSelectWorkshopNo(selectWorkshopNoJson.toString(), fileName);
-						adaptee.dispose();
-						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
-						// System.out.println("WorkShopNo: " +
-						// selectWorkShopNo);
-					} else {
-						JOptionPane.showMessageDialog(adaptee, "此卡無管理員權限");
-						System.out.println("此管理员不存在");// 打印结果
-					}
+		
+		if(adaptee.defaultWorkshopNo == null || adaptee.defaultWorkshopNo.equals("")){
+			try {
+				char[] pass = adaptee.text1.getPassword();
+				String CardID = new String(pass);
+				System.out.println("CardID: " + CardID);
+				String pattern = "^[0-9]\\d{9}$";
+				Pattern r = Pattern.compile(pattern, Pattern.DOTALL);
+				Matcher m = r.matcher(CardID);
+				// String WorkshopNo = SwipeCardLogin.jtf1.getText();
+				String selectWorkShopNo = adaptee.comboBox1.getSelectedItem().toString();
+				if (selectWorkShopNo.equals("--請選擇車間--")) {
+					JOptionPane.showMessageDialog(adaptee, "請選擇車間!");
 				} else {
-					JOptionPane.showMessageDialog(adaptee, "不合法卡號");
-					System.out.println("不合法卡號，含有非數字字符或卡號長度不正確");
+					if (m.matches() == true) {
+						Object[] a = adaptee.LineLeader;
+						/*
+						 * if(ShiftName.equals("日班")){ Shift="D"; }else
+						 * if(ShiftName.equals("夜班")){ Shift="N"; }
+						 */
+						if (isHave(a, CardID)) {// 调用自己定义的函数isHave，如果包含则返回true,否则返回false
+							System.out.println("成功登陸！");
+							/*
+							 * 将WorkShopNo保存到本地，以便下次自动进入相应的车间
+							 */
+							JsonFileUtil jsonFileUtil = new JsonFileUtil();
+							String fileName = "saveSelectWorkshopNo.json";
+							JSONObject selectWorkshopNoJson = new JSONObject();
+							selectWorkshopNoJson.put("workshopNo", selectWorkShopNo);
+							jsonFileUtil.saveSelectWorkshopNo(selectWorkshopNoJson.toString(), fileName);
+							adaptee.dispose();
+							SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+							 System.out.println("WorkShopNo: " +
+							 selectWorkShopNo);
+						} else {
+							JOptionPane.showMessageDialog(adaptee, "此卡無管理員權限");
+							System.out.println("此管理员不存在");// 打印结果
+						}
+					} else {
+						JOptionPane.showMessageDialog(adaptee, "不合法卡號");
+						System.out.println("不合法卡號，含有非數字字符或卡號長度不正確");
+					}
 				}
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
-		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		}else{
+			try {
+				/*char[] pass = adaptee.text1.getPassword();
+				String CardID = new String(pass);
+				System.out.println("CardID: " + CardID);
+				String pattern = "^[0-9]\\d{9}$";
+				Pattern r = Pattern.compile(pattern, Pattern.DOTALL);
+				Matcher m = r.matcher(CardID);*/
+				// String WorkshopNo = SwipeCardLogin.jtf1.getText();
+				String selectWorkShopNo = adaptee.comboBox1.getSelectedItem().toString();
+				if (selectWorkShopNo.equals("--請選擇車間--")) {
+					JOptionPane.showMessageDialog(adaptee, "請選擇車間!");
+				} else {
+					/*if (m.matches() == true) {*/
+//						Object[] a = adaptee.LineLeader;
+						/*
+						 * if(ShiftName.equals("日班")){ Shift="D"; }else
+						 * if(ShiftName.equals("夜班")){ Shift="N"; }
+						 */
+						/*if (isHave(a, CardID)) {*/// 调用自己定义的函数isHave，如果包含则返回true,否则返回false
+							System.out.println("成功登陸！");
+							/*
+							 * 将WorkShopNo保存到本地，以便下次自动进入相应的车间
+							 */
+							JsonFileUtil jsonFileUtil = new JsonFileUtil();
+							String fileName = "saveSelectWorkshopNo.json";
+							JSONObject selectWorkshopNoJson = new JSONObject();
+							selectWorkshopNoJson.put("workshopNo", selectWorkShopNo);
+							jsonFileUtil.saveSelectWorkshopNo(selectWorkshopNoJson.toString(), fileName);
+							adaptee.dispose();
+							SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+							// System.out.println("WorkShopNo: " +
+							// selectWorkShopNo);
+						/*} else {
+							JOptionPane.showMessageDialog(adaptee, "此卡無管理員權限");
+							System.out.println("此管理员不存在");// 打印结果
+						}*/
+					/*} else {
+						JOptionPane.showMessageDialog(adaptee, "不合法卡號");
+						System.out.println("不合法卡號，含有非數字字符或卡號長度不正確");
+					}*/
+				}
+			} catch (JSONException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		
+		
 	}
 }
