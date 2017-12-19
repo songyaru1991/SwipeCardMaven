@@ -43,8 +43,11 @@ import com.swipecard.model.User;
 public class SwipeCardLogin extends JFrame {
 	private final static String CurrentVersion = "V20171127";
 	private static Logger logger = Logger.getLogger(SwipeCardLogin.class);
+<<<<<<< HEAD
 	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
 	final  String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
+=======
+>>>>>>> parent of 32796a8... 提交修改
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	static {
@@ -61,7 +64,11 @@ public class SwipeCardLogin extends JFrame {
 			// System.out.println("sqlSessionFactory:"+sqlSessionFactory);
 		} catch (Exception e) {
 			logger.error("Login時 Error building SqlSession，原因:"+e);
+<<<<<<< HEAD
 //			 e.printStackTrace();
+=======
+			// e.printStackTrace();
+>>>>>>> parent of 32796a8... 提交修改
 			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error building SqlSession.", e);
 		}
@@ -103,8 +110,12 @@ public class SwipeCardLogin extends JFrame {
 		comboBox1.setFont(new Font("微软雅黑", Font.PLAIN, 18));
 
 		jtf1 = (JTextField) comboBox1.getEditor().getEditorComponent();
+<<<<<<< HEAD
 		
 		//如果有默认
+=======
+		final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
+>>>>>>> parent of 32796a8... 提交修改
 		if (defaultWorkshopNo != null) {
 			comboBox1.setSelectedItem(defaultWorkshopNo);
 		}
@@ -160,10 +171,16 @@ public class SwipeCardLogin extends JFrame {
 			}
 		});
 	}
+<<<<<<< HEAD
 	/**
 	 * 获取comboBox1下拉选项的菜单
 	 * @return
 	 */
+=======
+
+	JsonFileUtil jsonFileUtil = new JsonFileUtil();
+
+>>>>>>> parent of 32796a8... 提交修改
 	@SuppressWarnings("unchecked")
 	public Object[] getWorkshopNo() {// TODO
 		List<User> user;
@@ -192,7 +209,7 @@ public class SwipeCardLogin extends JFrame {
 			System.out.println("Error opening session");
 			logger.error("取得車間異常,原因"+e);
 			dispose();
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
 			ErrorContext.instance().reset();
@@ -224,7 +241,7 @@ public class SwipeCardLogin extends JFrame {
 			System.out.println("Error opening session");
 			logger.error("取得管理員卡號異常，原因:"+e);
 			dispose();
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
 			ErrorContext.instance().reset();
@@ -271,9 +288,7 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 			 */
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
-			JsonFileUtil jsonFileUtil = new JsonFileUtil();
-			final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			e.printStackTrace();
 		}
 	}

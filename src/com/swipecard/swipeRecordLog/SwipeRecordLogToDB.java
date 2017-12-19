@@ -41,7 +41,6 @@ public class SwipeRecordLogToDB {
 			 */
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
-			logger.error("無DB刷卡數據回寫時異常，原因:"+e);
 			e.printStackTrace();
 		}
 	}
@@ -518,7 +517,6 @@ public class SwipeRecordLogToDB {
 				session.commit();
 			}
 		} catch (ParseException e) {
-			logger.error("無DB刷卡數據回寫時異常，原因:"+e);
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

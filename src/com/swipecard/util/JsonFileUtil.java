@@ -6,22 +6,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.util.Date;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.swipecard.DateGet;
-import com.swipecard.SwipeCardNoDB;
+
 public class JsonFileUtil {
-	private static Logger logger = Logger.getLogger(JsonFileUtil.class);
-	  static JsonFileUtil jsonFileUtil = new JsonFileUtil();
-	  static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 
 	public static boolean createJsonFile(String jsonString, String fileName) {
 		boolean flag = true;
@@ -47,8 +46,6 @@ public class JsonFileUtil {
 			write.close();
 		} catch (Exception e) {
 			flag = false;
-			logger.error("createJsonFile時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		}
 		return flag;
@@ -89,18 +86,12 @@ public class JsonFileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getWorkshopNoByJson時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
 			if (brRread != null) {
@@ -142,18 +133,12 @@ public class JsonFileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);			
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSwipeCardRecordByJson時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
 			if (brRread != null) {
@@ -191,8 +176,6 @@ public class JsonFileUtil {
 			write.close();
 		} catch (Exception e) {
 			flag = false;
-			logger.error("saveSelectWorkshopNo時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		}
 		return flag;
@@ -226,27 +209,18 @@ public class JsonFileUtil {
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
-			logger.error("saveSelectWorkshopNo時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
-			logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			e.printStackTrace();
 		} finally {
 			if (brRread != null) {
 				try {
 					brRread.close();
 				} catch (IOException e) {
-					logger.error("getSaveWorkshopNo時 Error building SqlSession，原因:"+e);
-					// e.printStackTrace();
-					SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 					e.printStackTrace();
 				}
 			}

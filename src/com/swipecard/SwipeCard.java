@@ -55,7 +55,6 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.log4j.Logger;
 
 import com.swipecard.model.User;
-import com.swipecard.util.JsonFileUtil;
 
 public class SwipeCard extends JFrame {
 	private final static String CurrentVersion = "V20171127";
@@ -85,8 +84,7 @@ public class SwipeCard extends JFrame {
 	private MyNewTableModel myModel;
 	private JTable mytable;
 	Textc textc = null;
-	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
-	final static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
+
 	static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
 	private JLabel label;
@@ -100,9 +98,14 @@ public class SwipeCard extends JFrame {
 			 */
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
+<<<<<<< HEAD
 			logger.error("Error opening session:" + e);
 
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+=======
+			logger.error("Error opening session:"+e);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
+>>>>>>> parent of 32796a8... 提交修改
 			e.printStackTrace();
 		}
 	}
@@ -616,7 +619,11 @@ public class SwipeCard extends JFrame {
 					// System.out.println("State!"+ mytable.getColumnClass(0));
 				} catch (Exception e1) {
 					System.out.println("Error opening session");
+<<<<<<< HEAD
 					logger.error("綁定指示單號失敗,原因:" + e1);
+=======
+					logger.error(e1);
+>>>>>>> parent of 32796a8... 提交修改
 					dispose();
 					SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 					throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
@@ -1478,7 +1485,7 @@ public class SwipeCard extends JFrame {
 			System.out.println("Error opening session");
 			logger.error("取得指示單號異常:" + e1);
 			dispose();
-			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
 		} finally {
 			ErrorContext.instance().reset();

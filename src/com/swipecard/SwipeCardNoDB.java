@@ -37,7 +37,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.plaf.FontUIResource;
 
-import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,9 +45,8 @@ import com.swipecard.util.JsonFileUtil;
 import com.swipecard.util.PingMySqlUtil;
 import com.swipecard.swipeRecordLog.SwipeRecordLogToDB;
 
-public class SwipeCardNoDB extends JFrame {	
+public class SwipeCardNoDB extends JFrame {
 	private final static String CurrentVersion="V20171103";
-	private static Logger logger = Logger.getLogger(SwipeCardNoDB.class);
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
 	private int count = 0;
@@ -110,7 +108,6 @@ public class SwipeCardNoDB extends JFrame {
 					}
 					
 			} catch (Exception e) {
-				logger.error("ping DB ip時異常，原因:"+e);
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -336,12 +333,10 @@ public class SwipeCardNoDB extends JFrame {
 							jtextT1_1.setText("卡號為:" + CardID + "的員工\n" + swipeCardTime + "刷卡成功！\n");
 
 						} catch (IOException e1) {
-							logger.error("ping DB ip時異常，原因:"+e1);
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						} catch (JSONException e1) {
 							// TODO Auto-generated catch block
-							logger.error("無DB刷卡時異常，原因:"+e1);
 							e1.printStackTrace();
 						} finally {
 							textT1_3.setText("");
@@ -377,9 +372,7 @@ public class SwipeCardNoDB extends JFrame {
 		InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18));
 		String WorkShopNo = "FD1Q3F1";
 		// JLabelA d = new JLabelA(WorkShopNo, LineNo);
-		JsonFileUtil jsonFileUtil = new JsonFileUtil();
-		final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
-		SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+		SwipeCardNoDB d = new SwipeCardNoDB(null);
 	}
 
 }
