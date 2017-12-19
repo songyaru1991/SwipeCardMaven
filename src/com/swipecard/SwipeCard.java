@@ -57,7 +57,6 @@ import org.apache.log4j.Logger;
 import com.swipecard.model.User;
 
 public class SwipeCard extends JFrame {
-	private final static String CurrentVersion = "V20171127";
 	private static Logger logger = Logger.getLogger(SwipeCard.class);
 	private static final Timer nowTime = new Timer();
 	private Vector<Vector<Object>> rowData = new Vector<Vector<Object>>();
@@ -65,18 +64,15 @@ public class SwipeCard extends JFrame {
 	private int count = 0;
 	private String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private String time;
-	private int ONE_SECOND = 1000;
 
 	static JTabbedPane tabbedPane;
 	static JLabel label1, label3, swipeTimeLable, curTimeLable;
 	static JLabel labelS1, labelS2, labelS3;
 	static JPanel panel1, panel2, panel3;
 	static ImageIcon image;
-	static JLabel labelT2_1, labelT2_2, labelT2_3, labelT1_1, workShopNoJlabel, labelT1_3, labelT1_5, labelT1_6;
 	static JComboBox comboBox, comboBox2;
 	static MyJButton butT1_3, butT1_4, butT1_5, butT1_6, butT2_1, butT2_2, butT2_3, butT1_7, butT2_rcno;
 	static JTextArea jtextT1_1, jtextT1_2;
-	static TextField textT2_1, textT2_2, textT1_3, textT1_1, textT1_5, textT1_6;
 	static JTextField jtf, jtf2;
 	static JScrollPane jspT1_1, jspT2_2, JspTable, myScrollPane;
 	// static Object[] str1 = getItems();
@@ -87,7 +83,6 @@ public class SwipeCard extends JFrame {
 
 	static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
-	private JLabel label;
 	static {
 		try {
 			reader = Resources.getResourceAsReader("Configuration.xml");
@@ -98,6 +93,7 @@ public class SwipeCard extends JFrame {
 			 */
 			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		} catch (Exception e) {
+<<<<<<< HEAD
 <<<<<<< HEAD
 			logger.error("Error opening session:" + e);
 
@@ -131,6 +127,8 @@ public class SwipeCard extends JFrame {
 
 		super("產線端刷卡程式-" + CurrentVersion);
 
+		super("產線端刷卡程式-"+CurrentVersion);
+		
 		setBounds(12, 84, 1000, 630);
 		setResizable(true);
 		setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -145,6 +143,20 @@ public class SwipeCard extends JFrame {
 		 * frameShow.modifyComponentSize(this, proportionW,proportionH);
 		 * this.toFront();
 		 */
+	/*	
+		int fraWidth = this.getWidth();//frame的宽  
+        int fraHeight = this.getHeight();//frame的高  
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();  
+        int screenWidth = screenSize.width;  
+        int screenHeight = screenSize.height;  
+        this.setSize(screenWidth, screenHeight);  
+        this.setLocation(0, 0);  
+        float proportionW = screenWidth/fraWidth;  
+        float proportionH = screenHeight/fraHeight;  
+        FrameShowUtil frameShow=new FrameShowUtil();
+        frameShow.modifyComponentSize(this, proportionW,proportionH);  
+        this.toFront();  
+*/		
 		Container c = getContentPane();
 		tabbedPane = new JTabbedPane(JTabbedPane.LEFT); // 创建选项卡面板对象
 		// 创建标签
@@ -189,9 +201,6 @@ public class SwipeCard extends JFrame {
 		textT1_3 = new TextField(15);// 上班
 		textT1_3.setFont(new Font("微软雅黑", Font.PLAIN, 25));
 
-		textT1_6 = new TextField(15);// 管理员刷卡
-		textT1_6.setFont(new Font("微软雅黑", Font.PLAIN, 25));
-
 		jtextT1_1 = new JTextArea();// 刷卡人員信息,JTextArea(int rows, int columns)
 		jtextT1_1.setBackground(Color.WHITE);
 		jtextT1_2 = new JTextArea();// 備註
@@ -203,8 +212,10 @@ public class SwipeCard extends JFrame {
 		labelT1_1 = new JLabel("車間:");
 		labelT1_1.setFont(new Font("微软雅黑", Font.BOLD, 25));
 
+		
 		workShopNoJlabel = new JLabel("車間:");
 		workShopNoJlabel.setFont(new Font("微软雅黑", Font.BOLD, 25));
+		workShopNoJlabel.setFont(new Font("微软雅黑", Font.BOLD, 25));		
 
 		labelT1_3 = new JLabel("刷卡:");
 		labelT1_3.setFont(new Font("微软雅黑", Font.BOLD, 25));
@@ -264,16 +275,15 @@ public class SwipeCard extends JFrame {
 		labelT1_6.setBounds(x1, 8 * y1, x7, y1);
 
 		// textT1_1.setBounds(x1 + x7, 1 * y1, y4 + 100, y1);
+		//textT1_1.setBounds(x1 + x7, 1 * y1, y4 + 100, y1);
 		workShopNoJlabel.setBounds(x1 + x7, 1 * y1, y4 + 100, y1);
 		textT1_3.setBounds(x1 + x7, 2 * y1 + 20, y4 + 100, y1);
-		textT1_6.setBounds(204, 410, 263, 40);
 		jtextT1_2.setBounds(x1 + x7, 9 * y1, x4, y1);
 
 		textT2_1.setBounds(x1 + x7, 1 * y1, y4, y1);
 		textT2_2.setBounds(x1 + x7, 2 * y1 + 10, y4, y1);
 
 		swipeTimeLable.setBounds(400, y1, x4, 50);
-		curTimeLable.setBounds(35, 162, 400, 50);
 
 		jspT1_1 = new JScrollPane(jtextT1_1);
 		jspT1_1.setBounds(400, 2 * y1 + 20, x4, 250);
@@ -292,7 +302,6 @@ public class SwipeCard extends JFrame {
 
 		textT1_1.setEditable(false);
 		textT1_3.setEditable(true);
-		textT1_6.setEditable(false);
 
 		jtextT1_1.setEditable(false);
 		jtextT1_2.setEditable(false);
@@ -306,7 +315,6 @@ public class SwipeCard extends JFrame {
 		// textT1_3.setBackground(Color.GRAY);
 		jtextT1_2.setBackground(d);
 
-		butT1_5 = new MyJButton("更換車間", 2);
 		butT1_6 = new MyJButton("退出程式", 2);
 		// butT1_7 = new MyJButton("換線上班刷卡", 2);
 
@@ -315,26 +323,18 @@ public class SwipeCard extends JFrame {
 		butT2_3 = new MyJButton("人員刷新", 2);
 		butT2_rcno = new MyJButton("刷新指示單", 2);
 
-		butT1_5.setBounds(484, 410, x5, y1);
-		butT1_6.setBounds(640, 410, x5, y1);
 		butT2_1.setBounds(x4, 400, x5, y1);
 		butT2_3.setBounds(x6 + 60, 12 * y1, x5, y1);
 
 		butT2_rcno.setBounds(x2, 3 * y1 + 30, 100, y1);
 		butT2_2.setBounds(x2 + 110, 3 * y1 + 30, 90, y1);
 
-		// panel1.add(textT1_1);
 		panel1.add(textT1_3);
-		panel1.add(textT1_6);
 		panel1.add(labelT1_1);
 		panel1.add(workShopNoJlabel);
 
+		
 		panel1.add(labelT1_3);
-
-		label = new JLabel("更換車間刷卡：");
-		label.setFont(new Font("微软雅黑", Font.BOLD, 25));
-		label.setBounds(35, 410, 177, 40);
-		panel1.add(label);
 		panel1.add(swipeTimeLable);
 		panel1.add(curTimeLable);
 
@@ -364,12 +364,6 @@ public class SwipeCard extends JFrame {
 		// panel2.add(textT2_2);
 		// panel2.add(JspTable);
 		panel2.add(myScrollPane);
-		// 使用swing的线程做獲取焦點的界面绘制，避免获取不到的情况。
-		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
-				textT1_3.requestFocusInWindow();
-			}
-		});
 
 		// ItemListene取得用户选取的项目,ActionListener在JComboBox上自行输入完毕后按下[Enter]键,运作相对应的工作
 		comboBox.addItemListener(new ItemListener() {
@@ -385,7 +379,6 @@ public class SwipeCard extends JFrame {
 					} else {
 						SqlSession session = sqlSessionFactory.openSession();
 						try {
-							/// 通过RC_NO查找一个用户
 							User eif = (User) session.selectOne("selectUserByRCNo", RC_NO);
 							if (eif != null) {
 								textT2_1.setText(eif.getPRIMARY_ITEM_NO());
@@ -417,13 +410,11 @@ public class SwipeCard extends JFrame {
 			public void keyTyped(KeyEvent e) {
 			}
 
-			/// 键盘松开事件
 			public void keyReleased(KeyEvent e) {
 				String key = jtf.getText();
 				comboBox.removeAllItems();
 				// for (Object item : getItems()) {
 				if (str1 != null) {
-					/// 遍历str1，把选项放进comboBox
 					for (Object item : str1) {
 						// 可以把contains改成startsWith就是筛选以key开头的项目
 						// contains(key)/startsWith(key)
@@ -438,81 +429,13 @@ public class SwipeCard extends JFrame {
 			public void keyPressed(KeyEvent e) {
 			}
 		});
-		/*
-		 * l 点击登出的时候设置全局font并回到登陆界面
-		 */
 		butT1_5.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String bt = butT1_5.getText();
-				if (bt.equals("更換車間")) {
-					butT1_5.setText("刷卡上下班");
-					jtextT1_1.setText("請管理員刷卡");
-					jtextT1_1.setBackground(Color.WHITE);
-					textT1_3.setEditable(false);
-					textT1_6.setEditable(true);
-					// 使用swing的线程做獲取焦點的界面绘制，避免获取不到的情况。
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							textT1_6.requestFocusInWindow();
-						}
-					});
-				} else {
-					butT1_5.setText("更換車間");
-					jtextT1_1.setText("刷卡上下班");
-					jtextT1_1.setBackground(Color.WHITE);
-					textT1_3.setEditable(true);
-					textT1_6.setEditable(false);
-					// 使用swing的线程做獲取焦點的界面绘制，避免获取不到的情况。
-					SwingUtilities.invokeLater(new Runnable() {
-						public void run() {
-							textT1_3.requestFocusInWindow();
-						}
-					});
-				}
 			}
 		});
 
-		/*
-		 * l 刷管理员的卡选择车间
-		 */
-		textT1_6.addTextListener(new TextListener() {
-
-			@Override
-			public void textValueChanged(TextEvent e) {
-				SqlSession session = sqlSessionFactory.openSession();
-				// TODO Auto-generated method stub
-				String cardID = textT1_6.getText();
-				if (cardID.length() > 10) {
-					jtextT1_1.setBackground(Color.RED);
-					jtextT1_1.setText("卡號輸入有誤，請再次刷卡\n");
-					textT1_6.setText("");
-				} else {
-					String pattern = "^[0-9]\\d{9}$";
-					Pattern r = Pattern.compile(pattern, Pattern.DOTALL);
-					Matcher m = r.matcher(cardID);
-					if (m.matches() == true) {
-						boolean admin = IsAdminByCardID(cardID, session);
-						if (admin) {
-							dispose();
-							SwipeCardLogin swipeCardLogin = new SwipeCardLogin();
-							textT1_6.setText("");
-						} else {
-							jtextT1_1.setBackground(Color.RED);
-							jtextT1_1.setText("您的卡权限不够\n请刷管理员的卡");
-							textT1_6.setText("");
-						}
-					} else {
-						System.out.println("無輸入內容或輸入錯誤!");
-					}
-				}
-			}
-		});
-
-		/*
-		 * l 退出程序
-		 */
 		butT1_6.addActionListener(new ActionListener() {
 
 			@Override
@@ -530,9 +453,6 @@ public class SwipeCard extends JFrame {
 				jtf.setEditable(true);
 			}
 		});
-		/*
-		 * l 确认提交指示单
-		 */
 		butT2_2.addActionListener(new ActionListener() {
 
 			@Override
@@ -543,6 +463,7 @@ public class SwipeCard extends JFrame {
 				Boolean State = null;
 				User user1 = new User();
 				// String WorkshopNo = textT1_1.getText();
+			//	String WorkshopNo = textT1_1.getText();
 				String WorkshopNo = workShopNoJlabel.getText();
 				String RC_NO = jtf.getText();
 				String PRIMARY_ITEM_NO = textT2_1.getText();
@@ -550,7 +471,6 @@ public class SwipeCard extends JFrame {
 				try {
 					SqlSession session = sqlSessionFactory.openSession();
 					StringBuilder strBuilder = new StringBuilder();
-					/// 去掉RC_NO中的空格
 					for (int i = 0; i < RC_NO.length(); i++) {
 						char charAt = RC_NO.charAt(i);
 						if (charAt == ' ')
@@ -558,7 +478,6 @@ public class SwipeCard extends JFrame {
 						strBuilder.append(charAt);
 					}
 					RC_NO = strBuilder.toString();
-					/// 判断RC_NO不为空
 					if (!RC_NO.equals("") && RC_NO != "" && RC_NO != null) {
 						// user1.setPROD_LINE_CODE(LineNo);
 						user1.setWorkshopNo(WorkshopNo);
@@ -566,9 +485,6 @@ public class SwipeCard extends JFrame {
 						user1.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 						boolean isaddItem = false;
 						str1 = getItems();
-						/*
-						 * l 如果str1不为空，遍历str1判断是否有等于RC_NO的知识单号
-						 */
 						if (str1 != null) {
 							for (Object item : str1) {
 								if (((String) item).equals(RC_NO)) {
@@ -581,14 +497,9 @@ public class SwipeCard extends JFrame {
 								}
 							}
 						}
-						/// 如果isaddItem为true，则添加新的RC
 						if (isaddItem) {
-							synchronized (this) {
-								session.insert("insertRCInfo", user1);
-							}
 							session.commit();
 						}
-						/// 遍历table的每一行，判断是否选中，若选中则给选中的行的人添加指示单号
 						for (int i = 0; i < countRow; i++) {
 							State = (Boolean) mytable.getValueAt(i, 0);
 							if (State == true) {
@@ -618,6 +529,7 @@ public class SwipeCard extends JFrame {
 					panel2.repaint(); // 重绘此组件。
 					// System.out.println("State!"+ mytable.getColumnClass(0));
 				} catch (Exception e1) {
+				} catch (Exception e1) {					
 					System.out.println("Error opening session");
 <<<<<<< HEAD
 					logger.error("綁定指示單號失敗,原因:" + e1);
@@ -632,9 +544,6 @@ public class SwipeCard extends JFrame {
 				}
 			}
 		});
-		/*
-		 * l 点击人员刷新，刷新table
-		 */
 		butT2_3.addActionListener(new ActionListener() {
 
 			@Override
@@ -644,9 +553,6 @@ public class SwipeCard extends JFrame {
 			}
 		});
 
-		/*
-		 * l 刷新指示单号的下拉选项
-		 */
 		butT2_rcno.addActionListener(new ActionListener() {
 
 			@Override
@@ -658,6 +564,7 @@ public class SwipeCard extends JFrame {
 		// TODO 刷卡模式
 		textT1_3.addTextListener(new TextListener() {
 			/// 当test里的内容发生改变的时候触发事件
+
 			@Override
 			public void textValueChanged(TextEvent e) {
 				SqlSession session = sqlSessionFactory.openSession();
@@ -668,6 +575,7 @@ public class SwipeCard extends JFrame {
 
 				String swipeCardTime = DateGet.getTime();
 				// String WorkshopNo = textT1_1.getText();
+				//String WorkshopNo = textT1_1.getText();
 				String WorkshopNo = workShopNoJlabel.getText();
 				// 驗證是否為10位整數，是則繼續執行，否則提示
 				// System.out.println(m.matches());
@@ -691,6 +599,9 @@ public class SwipeCard extends JFrame {
 							// 只要刷卡都將記錄至raw_record table
 							addRawSwipeRecord(session, eif, CardID, swipeCardTime, WorkshopNo);
 							// 如果没有员工信息
+							
+							//只要刷卡都將記錄至raw_record table
+							addRawSwipeRecord(session, eif, CardID,swipeCardTime,WorkshopNo);
 							if (eif == null) {
 								String swipeDate = DateGet.getDate();
 								User selEmp = new User();
@@ -698,18 +609,23 @@ public class SwipeCard extends JFrame {
 								selEmp.setSwipeDate(swipeDate);
 								int lostRows = session.selectOne("selectLoseEmployee", selEmp);
 								User user1 = new User();
+								int lostRows = session.selectOne("selectLoseEmployee", selEmp);	
+								User user1 = new User();								
 								user1.setCardID(CardID);
 								user1.setWorkshopNo(WorkshopNo);
 								user1.setSwipeDate(swipeDate);
 								user1.setSwipeCardTime(swipeCardTime);
 								user1.setRecord_status("1");
 
+								
 								if (lostRows > 0) {
 									// JOptionPane.showMessageDialog(null,"已記錄當前異常刷卡人員，今天不用再次刷卡！");
 									jtextT1_1.setText("已記錄當前異常刷卡人員，今天不用再次刷卡！\n");
 									jtextT1_1.setBackground(Color.RED);
 									textT1_3.setText("");
 									session.update("updateRawRecordStatus", user1);
+									textT1_3.setText("");								
+									session.update("updateRawRecordStatus",user1);
 									session.commit();
 									return;
 								}
@@ -719,18 +635,11 @@ public class SwipeCard extends JFrame {
 								 * );
 								 */
 								jtextT1_1.setText("當前刷卡人員不存在；可能是新進人員，或是舊卡丟失補辦，人員資料暫時未更新，請線長記錄，協助助理走原有簽核流程！\n");
-								jtextT1_1.setBackground(Color.RED);
-								/// 添加到lose_employee中
-								synchronized (this) {
-									session.insert("insertUserByNoCard", user1);
-								}
-								/// 更改cardid状态码为1：无人员资料
-								session.update("updateRawRecordStatus", user1);
 								session.commit();
 
-							} else {/// 如果有员工信息
 								String name = eif.getName();
 								// String costId=
+								//String costId=
 								String RC_NO = jtf.getText();
 								String PRIMARY_ITEM_NO = textT2_1.getText();
 								String Id = eif.getId();
@@ -749,15 +658,33 @@ public class SwipeCard extends JFrame {
 									int empCurShiftCount = session.selectOne("getShiftCount", curShiftUser);
 									int empYesShiftCount = session.selectOne("getShiftCount", yesShiftUser);
 									/// 找到员工昨天的工作班次上下班时间等
+								String Id = eif.getId();						
+								//判斷該卡號是否已連續工作六天								
+								if(!isUserContinuesWorkedOneWeek(session,eif,CardID,WorkshopNo,swipeCardTime)){					
+									
+									//該卡號是連續工作日小於六天
+								    User curShiftUser = new User();
+								    curShiftUser.setId(Id);
+								    curShiftUser.setShiftDay(0);
+								     
+								    User yesShiftUser = new User();
+								    yesShiftUser.setId(Id);
+								    yesShiftUser.setShiftDay(1);
+								    
+								    int empCurShiftCount =  session.selectOne("getShiftCount", curShiftUser);
+									int empYesShiftCount =  session.selectOne("getShiftCount", yesShiftUser);
 									User empYesShift = (User) session.selectOne("getShiftByEmpId", yesShiftUser);
 
+								
 									String yesterdayShift = "";
 									if (empYesShiftCount > 0) {
 										String yesterdayClassDesc = empYesShift.getClass_desc();
 
+							
 										yesterdayShift = empYesShift.getShift();
 										if (yesterdayShift.equals("N")) {
 
+											
 											Timestamp yesClassStart = empYesShift.getClass_start();
 											Timestamp yesClassEnd = empYesShift.getClass_end();
 											Timestamp goWorkSwipeTime = new Timestamp(new Date().getTime());
@@ -766,31 +693,43 @@ public class SwipeCard extends JFrame {
 											outWorkc.setTime(yesClassEnd);
 											outWorkc.set(Calendar.HOUR_OF_DAY, outWorkc.get(Calendar.HOUR_OF_DAY) + 3);
 											outWorkc.set(Calendar.MINUTE, outWorkc.get(Calendar.MINUTE) + 30);
+											outWorkc.set(Calendar.HOUR_OF_DAY,
+													outWorkc.get(Calendar.HOUR_OF_DAY) + 3);
+											outWorkc.set(Calendar.MINUTE,
+													outWorkc.get(Calendar.MINUTE) + 30);
 											Date dt = outWorkc.getTime();
 											Timestamp afterClassEnd = new Timestamp(dt.getTime());
 
+											Timestamp afterClassEnd = new Timestamp(dt.getTime());									
+																					
 											if (empCurShiftCount == 0) {
 												if (goWorkSwipeTime.before(afterClassEnd)) {
 													// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷
 													outWorkNSwipeCard(session, eif, CardID, swipeCardTime,
 															yesterdayShift, yesterdayClassDesc);
 												} else {
+													outWorkNSwipeCard(session,eif,CardID,swipeCardTime,yesterdayShift,yesterdayClassDesc);
+												}else{
 													// 刷卡在夜班下班3.5小時之后,今日班別有誤
 													jtextT1_1.setBackground(Color.red);
 													jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName()
 															+ "\n班別有誤，請聯繫助理核對班別信息!\n");
+													jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n班別有誤，請聯繫助理核對班別信息!\n");
 													User user1 = new User();
 													user1.setCardID(CardID);
 													user1.setId(Id);
 													user1.setSwipeCardTime(swipeCardTime);
 													user1.setRecord_status("2");
 													session.update("updateRawRecordStatus", user1);
+													session.update("updateRawRecordStatus",user1);
 													session.commit();
 												}
 
+												
 											} else {
 												User empCurShift = (User) session.selectOne("getShiftByEmpId",
 														curShiftUser);
+												User empCurShift = (User) session.selectOne("getShiftByEmpId", curShiftUser);
 
 												String curShift = empCurShift.getShift();
 												String curClassDesc = empCurShift.getClass_desc();
@@ -815,9 +754,13 @@ public class SwipeCard extends JFrame {
 														outWorkNSwipeCard(session, eif, CardID, swipeCardTime,
 																yesterdayShift, yesterdayClassDesc);
 
+														
+														outWorkNSwipeCard(session,eif,CardID,swipeCardTime,yesterdayShift,yesterdayClassDesc);
+														
 													} else {
 														// 上班刷卡
 														swipeCardRecord(session, eif, CardID, swipeCardTime);
+														swipeCardRecord(session, eif, CardID,swipeCardTime);
 													}
 												} else {
 
@@ -826,10 +769,18 @@ public class SwipeCard extends JFrame {
 													if (goWorkNCardCount > 0) {
 														// 昨日夜班已存在下刷
 														int yesterdaygoWorkCardCount = session
+													
+													
+													int goWorkNCardCount =  session
+															.selectOne("selectGoWorkNByCardID", userNSwipe);
+													if (goWorkNCardCount > 0) { 
+														// 昨日夜班已存在上刷
+														int yesterdaygoWorkCardCount =  session
 																.selectOne("selectCountNByCardID", userNSwipe);
 														if (yesterdaygoWorkCardCount == 0) {
 															// 夜班下刷刷卡記錄不存在
 
+															
 															if (goWorkSwipeTime.before(afterClassEnd)) {
 																// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷
 																jtextT1_1.setBackground(Color.WHITE);
@@ -838,6 +789,11 @@ public class SwipeCard extends JFrame {
 																		+ swipeCardTime + "\n昨日班別為:"
 																		+ yesterdayClassDesc + "\n"
 																		+ "員工下班刷卡成功！\n------------\n");
+																jtextT1_1.setText(
+																		"下班刷卡\n" + "ID: " + eif.getId() + "\nName: "
+																				+ eif.getName() + "\n刷卡時間： " + swipeCardTime
+																				+"\n昨日班別為:"+yesterdayClassDesc
+																				+ "\n" + "員工下班刷卡成功！\n------------\n");
 																session.update("updateOutWorkNSwipeTime", userNSwipe);
 																session.commit();
 															} else {
@@ -847,16 +803,22 @@ public class SwipeCard extends JFrame {
 																// curShift,
 																// curClassDesc,curClassStart);
 																swipeCardRecord(session, eif, CardID, swipeCardTime);
+															//	goOrOutWorkSwipeRecord(session, eif, CardID, curShift,
+																//		curClassDesc,curClassStart);
+																swipeCardRecord(session, eif,CardID,swipeCardTime);
 															}
 														} else {
 															// 夜班下刷刷卡記錄已存在
 															int isOutWoakSwipeDuplicate = session
+															int isOutWoakSwipeDuplicate =  session
 																	.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
 															if (isOutWoakSwipeDuplicate > 0) {
 																outWorkSwipeDuplicate(session, eif, CardID,
 																		swipeCardTime, yesterdayShift);
+																outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, yesterdayShift);
 															} else {
 																swipeCardRecord(session, eif, CardID, swipeCardTime);
+																swipeCardRecord(session, eif,CardID,swipeCardTime);
 															}
 														}
 													} else {
@@ -924,20 +886,66 @@ public class SwipeCard extends JFrame {
 														 * curClassStart); } }
 														 */
 													}
+														// 昨天夜班，今天白班的，昨日夜班上刷不存在，直接記為今天白班刷卡														
+													  swipeCardRecord(session, eif,CardID,swipeCardTime);
+										            	/*
+														int yesterdaygoWorkCardCount =  session
+																.selectOne("selectOutWorkByCardID", userNSwipe);
+														if (yesterdaygoWorkCardCount == 0) {
+															// 夜班下刷刷卡記錄不存在
+															
+															if (goWorkSwipeTime.before(afterClassEnd)) {
+																// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷
+																jtextT1_1.setBackground(Color.WHITE);
+																jtextT1_1.setText("下班刷卡\n" + "ID: " + eif.getId()
+																		+ "\nName: " + eif.getName() + "\n刷卡時間： "
+																		+ swipeCardTime + "\n"
+																		+"昨日班別為:"+yesterdayClassDesc
+																		+ "\n員工下班刷卡成功！\n------------\n");
+																session.insert("insertOutWorkSwipeTime",
+																		userNSwipe);
+																session.commit();
+															} else {
+																// 刷卡在夜班下班3.5小時之后,記為今日白班上刷
+															//	goOrOutWorkSwipeRecord(session, eif, CardID, curShift,
+															//			curClassDesc,curClassStart);
+																
+																swipeCardRecord(session, eif,CardID);
+															}
+														} else {
+															// 夜班下刷刷卡記錄已存在
+															int isOutWoakSwipeDuplicate =  session
+																	.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
+															if (isOutWoakSwipeDuplicate > 0) {
+																outWorkSwipeDuplicate(session, eif, CardID, yesterdayShift);
+															} else {
+																goOrOutWorkSwipeRecord(session, eif, CardID, curShift,
+																		curClassDesc,curClassStart);
+															}
+														}																											
+													*/
+														}
 												}
 
 											}
 										} else {
 											swipeCardRecord(session, eif, CardID, swipeCardTime);
+											swipeCardRecord(session, eif, CardID,swipeCardTime);
 										}
 									} else {
 										swipeCardRecord(session, eif, CardID, swipeCardTime);
+										swipeCardRecord(session, eif, CardID,swipeCardTime);
 									}
 
 								} else {
 									// 該卡號已連續工作六天，顯示錯誤訊息
 									jtextT1_1.append(
 											"工號：" + eif.getId() + " 姓名：" + eif.getName() + " 已連續上班六天，此次刷卡不列入記錄！!\n");
+									
+								}
+								else{
+									//該卡號已連續工作六天，顯示錯誤訊息
+									jtextT1_1.append("工號："+eif.getId()+" 姓名："+eif.getName()+" 已連續上班六天，此次刷卡不列入記錄！!\n");
 									jtextT1_1.setBackground(Color.RED);
 									User user1 = new User();
 									user1.setCardID(CardID);
@@ -945,13 +953,17 @@ public class SwipeCard extends JFrame {
 									user1.setSwipeCardTime(swipeCardTime);
 									user1.setRecord_status("4");
 									session.update("updateRawRecordStatus", user1);
+									session.update("updateRawRecordStatus",user1);
 									session.commit();
 								}
 
+								}		
+														
 							}
 						} catch (Exception e1) {
 							System.out.println("Error opening session");
 							logger.error("刷卡異常,原因:" + e1);
+							logger.error("刷卡異常,原因:"+e1);
 							dispose();
 							SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 							throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
@@ -974,6 +986,7 @@ public class SwipeCard extends JFrame {
 		c.setBackground(Color.lightGray);
 
 		// textT1_1.setText(WorkshopNo);// 綁定車間
+		//textT1_1.setText(WorkshopNo);// 綁定車間
 		workShopNoJlabel.setText(WorkshopNo);
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -1001,6 +1014,7 @@ public class SwipeCard extends JFrame {
 
 		String Id = eif.getId();
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 
 		User curShiftUser = new User();
@@ -1009,6 +1023,12 @@ public class SwipeCard extends JFrame {
 
 		int empCurShiftCount = session.selectOne("getShiftCount", curShiftUser);
 		/// 当前用户无班别信息
+		
+		  User curShiftUser = new User();
+		  curShiftUser.setId(Id);
+		  curShiftUser.setShiftDay(0);
+		  
+		int empCurShiftCount =  session.selectOne("getShiftCount", curShiftUser);
 		if (empCurShiftCount == 0) {
 			jtextT1_1.setBackground(Color.red);
 			jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n班別有誤，請聯繫助理核對班別信息!\n");
@@ -1018,9 +1038,9 @@ public class SwipeCard extends JFrame {
 			user1.setSwipeCardTime(swipeCardTime);
 			user1.setRecord_status("2");
 			session.update("updateRawRecordStatus", user1);
+			session.update("updateRawRecordStatus",user1);
 			session.commit();
 		} else {
-			/// 找出该用户上下班时间等信息
 			User empCurShift = (User) session.selectOne("getShiftByEmpId", curShiftUser);
 
 			String curShift = empCurShift.getShift();
@@ -1042,24 +1062,20 @@ public class SwipeCard extends JFrame {
 			param.put("WorkshopNo", WorkshopNo);
 			param.put("Shift", curShift);
 			param.put("SwipeCardTime", swipeCardTime);
-			/// 如果刷卡时间在上班时间的前一个小时内
 			if (goWorkSwipeTime.after(oneHBeforClassStart) && goWorkSwipeTime.before(curClassStart)) {
-				/// 查询是否已经有刷卡记录
-				int isGoWorkSwipeDuplicate = session.selectOne("isGoWorkSwipeDuplicate", param);
-				/// 如果有则添加到重复记录，没有则添加一条上班记录
 				if (isGoWorkSwipeDuplicate > 0) {
 
 					goWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, curShift);
+					goWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, curShift);
 
 				} else {
 					goOrOutWorkSwipeRecord(session, eif, CardID, swipeCardTime, curShift, curClassDesc, curClassStart);
+					goOrOutWorkSwipeRecord(session, eif, CardID,swipeCardTime, curShift, curClassDesc,curClassStart);
 				}
 
 			} else {
 
 				if (curShift.equals("D")) {
-					/// 如果刷卡时间在下班时间之后
-					if (goWorkSwipeTime.after(curClassEnd)) {
 						String name = eif.getName();
 						String RC_NO = jtf.getText();
 						String PRIMARY_ITEM_NO = textT2_1.getText();
@@ -1074,27 +1090,13 @@ public class SwipeCard extends JFrame {
 						userSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 						userSwipe.setShift(curShift);
 						userSwipe.setWorkshopNo(WorkshopNo);
-						/// 查看今天是否有上刷记录
-						int curDayGoWorkCardCount = session.selectOne("selectCountAByCardID", userSwipe);
 
 						if (curDayGoWorkCardCount == 0) {
-							/// 找到今天下班刷卡记录
-							int isOutWoakSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate", userSwipe);
-							/// 重复下班刷卡
 							if (isOutWoakSwipeDuplicate > 0) {
-								outWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, curShift);
 							} else {
-								/// 找出该id没有上刷但有下刷的数量
-								int outWorkCardCount = session.selectOne("selectOutWorkByCardID", userSwipe);
 
 								if (outWorkCardCount == 0) {
 									jtextT1_1.setBackground(Color.WHITE);
-									jtextT1_1.setText("下班刷卡\n" + "ID: " + Id + "\nName: " + eif.getName() + "\n刷卡時間： "
-											+ swipeCardTime + "\n今日班別為：" + curClassDesc + "\n"
-											+ "員工下班刷卡成功！\n------------\n");
-									synchronized (this) {
-										session.insert("insertOutWorkSwipeTime", userSwipe);
-									}
 									session.commit();
 								} else {
 									jtextT1_1.setBackground(Color.red);
@@ -1106,15 +1108,18 @@ public class SwipeCard extends JFrame {
 									user1.setSwipeCardTime(swipeCardTime);
 									user1.setRecord_status("6");
 									session.update("updateRawRecordStatus", user1);
+									session.update("updateRawRecordStatus",user1);
 									session.commit();
 								}
 							}
 						} else {
 							outWorkSwipeCard(session, eif, CardID, swipeCardTime, curShift, curClassDesc);
+							outWorkSwipeCard(session, eif, CardID,swipeCardTime, curShift, curClassDesc);
 						}
 					} else {
 						goOrOutWorkSwipeRecord(session, eif, CardID, swipeCardTime, curShift, curClassDesc,
 								curClassStart);
+						goOrOutWorkSwipeRecord(session, eif, CardID,swipeCardTime, curShift, curClassDesc,curClassStart);
 					}
 				} else {
 
@@ -1125,6 +1130,7 @@ public class SwipeCard extends JFrame {
 					if (goWorkSwipeTime.getHours() > 12) {// 刷卡在中午12點后為今日夜班上刷
 						goOrOutWorkSwipeRecord(session, eif, CardID, swipeCardTime, curShift, curClassDesc,
 								curClassStart);
+						goOrOutWorkSwipeRecord(session, eif, CardID,swipeCardTime, curShift, curClassDesc,curClassStart);
 					} else if (goWorkSwipeTime.getHours() <= 12) {// 刷卡在中午12點前
 						jtextT1_1.setBackground(Color.RED);
 						jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n班別： " + curClassDesc
@@ -1135,6 +1141,7 @@ public class SwipeCard extends JFrame {
 						user1.setSwipeCardTime(swipeCardTime);
 						user1.setRecord_status("3");
 						session.update("updateRawRecordStatus", user1);
+						session.update("updateRawRecordStatus",user1);
 						session.commit();
 					}
 
@@ -1149,6 +1156,10 @@ public class SwipeCard extends JFrame {
 			String curShift, String curClassDesc, Timestamp curClassStart) {
 		String Id = eif.getId();
 		// String WorkshopNo = textT1_1.getText();
+	public void goOrOutWorkSwipeRecord(SqlSession session, User eif, String CardID, String swipeCardTime, String curShift,
+			String curClassDesc,Timestamp curClassStart) {
+		String Id = eif.getId();	
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("CardID", CardID);
@@ -1156,21 +1167,23 @@ public class SwipeCard extends JFrame {
 		param.put("WorkshopNo", WorkshopNo);
 		param.put("Shift", curShift);
 		param.put("SwipeCardTime", swipeCardTime);
-		/// 查找是否有上述记录
-		int curDayGoWorkCardCount = session.selectOne("selectCountAByCardID", param);
 		// 無刷卡記錄
 		if (curDayGoWorkCardCount == 0) {
 
 			goWorkSwipeCard(session, eif, CardID, swipeCardTime, curShift, curClassDesc, curClassStart);
+				
+			goWorkSwipeCard(session, eif, CardID,swipeCardTime, curShift, curClassDesc,curClassStart);
 
 		} else if (curDayGoWorkCardCount > 0) {
 
 			int isGoWorkSwipeDuplicate = session.selectOne("isGoWorkSwipeDuplicate", param);
 			if (isGoWorkSwipeDuplicate > 0) {
 				goWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, curShift);
+				goWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, curShift);
 			} else {
 				// 下班刷卡
 				outWorkSwipeCard(session, eif, CardID, swipeCardTime, curShift, curClassDesc);
+				outWorkSwipeCard(session, eif, CardID,swipeCardTime, curShift, curClassDesc);
 			}
 		}
 
@@ -1178,8 +1191,10 @@ public class SwipeCard extends JFrame {
 
 	public void goWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String curShift,
 			String curClassDesc, Timestamp curClassStart) {
+	public void goWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String curShift, String curClassDesc,Timestamp curClassStart) {
 
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 
 		String name = eif.getName();
@@ -1187,8 +1202,10 @@ public class SwipeCard extends JFrame {
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
 		// 更換date_formatyyyy-MM-dd HH:mm:ss.SSS
+		//更換date_formatyyyy-MM-dd HH:mm:ss.SSS  
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		try {
+	    try {
 
 			Date parsedDate = dateFormat.parse(swipeCardTime);
 			Timestamp swipeTime = new java.sql.Timestamp(parsedDate.getTime());
@@ -1200,6 +1217,13 @@ public class SwipeCard extends JFrame {
 			long diffMinutes = (curClassStart.getTime() - swipeTime.getTime()) / (60 * 1000);
 
 			if (diffMinutes > 14) {// 14精确到秒
+			 * 原有逻辑
+			long diffMinutes=(swipeTime.getTime()-onDutyClassTime.getTime())/(60*1000);	
+			if((diffMinutes>=0 && diffMinutes<=15)||diffMinutes>15){
+			*/
+			long diffMinutes=(curClassStart.getTime() - swipeTime.getTime())/(60*1000);
+			
+			if(diffMinutes>14){//14精确到秒
 				jtextT1_1.setBackground(Color.RED);
 				jtextT1_1.setText("上班刷卡\n" + "ID: " + eif.getId() + "\nName: " + eif.getName() + "\n班別： " + curClassDesc
 						+ "\n刷卡時間： " + swipeCardTime + "\n" + "超出上班刷卡時間限制，請於上班前15分鐘刷卡！\n------------\n");
@@ -1209,9 +1233,13 @@ public class SwipeCard extends JFrame {
 				user1.setSwipeCardTime(swipeCardTime);
 				user1.setRecord_status("3");
 				session.update("updateRawRecordStatus", user1);
+				session.update("updateRawRecordStatus",user1);
 				session.commit();
 			} else {
 				// 上刷時間介於班別15分鐘至班別起始時間，則進行記錄
+			}
+			else{
+				//上刷時間介於班別15分鐘至班別起始時間，則進行記錄
 				jtextT1_1.setBackground(Color.WHITE);
 				jtextT1_1.setText("上班刷卡\n" + "ID: " + Id + "\nName: " + eif.getName() + "\n班別： " + curClassDesc
 						+ "\n刷卡時間： " + swipeCardTime + "\n" + "員工上班刷卡成功！\n------------\n");
@@ -1226,14 +1254,12 @@ public class SwipeCard extends JFrame {
 				user1.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 				user1.setWorkshopNo(WorkshopNo);
 				user1.setShift(curShift);
-				synchronized (this) {
-					session.insert("insertUserByOnDNShift", user1);
-				}
 				session.commit();
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			logger.error("上班刷卡異常，原因：" + e);
+			logger.error("上班刷卡異常，原因："+e);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 			e.printStackTrace();
@@ -1242,10 +1268,13 @@ public class SwipeCard extends JFrame {
 
 	public void outWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String Shift,
 			String ClassDesc) {
+	public void outWorkSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String Shift, String ClassDesc) {
 
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 		String Id = eif.getId();
+		String Id=eif.getId();
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("CardID", CardID);
 		param.put("Id", Id);
@@ -1254,12 +1283,15 @@ public class SwipeCard extends JFrame {
 		param.put("SwipeCardTime2", swipeCardTime);
 
 		int curDayOutWorkCardCount = session.selectOne("selectCountBByCardID", param);
+		int curDayOutWorkCardCount =  session.selectOne("selectCountBByCardID", param);
 
 		if (curDayOutWorkCardCount > 0) {
 			int isOutWoakSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate", param);
+			int isOutWoakSwipeDuplicate =  session.selectOne("isOutWorkSwipeDuplicate", param);
 			if (isOutWoakSwipeDuplicate > 0) {
 
 				outWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, Shift);
+				outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, Shift);
 
 			} else {
 				jtextT1_1.setBackground(Color.red);
@@ -1270,6 +1302,7 @@ public class SwipeCard extends JFrame {
 				user1.setSwipeCardTime(swipeCardTime);
 				user1.setRecord_status("6");
 				session.update("updateRawRecordStatus", user1);
+				session.update("updateRawRecordStatus",user1);
 				session.commit();
 			}
 		} else if (curDayOutWorkCardCount == 0) {
@@ -1291,11 +1324,17 @@ public class SwipeCard extends JFrame {
 			String yesterdayShift, String yesterdayClassDesc) {
 		String Id = eif.getId();
 		String name = eif.getName();
+	
+	public void outWorkNSwipeCard(SqlSession session, User eif, String CardID, String swipeCardTime, String yesterdayShift, String yesterdayClassDesc) 
+	{
+		String Id=eif.getId();
+		String name=eif.getName();
 		String WorkshopNo = workShopNoJlabel.getText();
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
 		User userNSwipe = new User();
 		String SwipeCardTime2 = swipeCardTime;
+		String SwipeCardTime2 = swipeCardTime;														
 		userNSwipe.setId(Id);
 		userNSwipe.setName(name);
 		userNSwipe.setCardID(CardID);
@@ -1304,46 +1343,50 @@ public class SwipeCard extends JFrame {
 		userNSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 		userNSwipe.setShift(yesterdayShift);
 		userNSwipe.setWorkshopNo(WorkshopNo);
-		/// 查询昨天有上下班刷卡的记录
-		int yesterdaygoWorkCardCount = session.selectOne("selectCountNByCardID", userNSwipe);
 
 		// 下班刷卡
 
 		if (yesterdaygoWorkCardCount > 0) {
-			// 已有上刷和下刷記錄
-			int isOutWoakSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
-			/// 今天本次刷卡前10分钟是否有下刷记录
 			if (isOutWoakSwipeDuplicate > 0) {
 
 				outWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, yesterdayShift);
+				outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime, yesterdayShift);
 
 			} else {
 				jtextT1_1.setBackground(Color.red);
 				jtextT1_1.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n" + "今日上下班卡已刷，此次刷卡無效！\n");
+				jtextT1_1.append("ID: " + eif.getId() + " Name: "
+						+ eif.getName() + "\n" + "今日上下班卡已刷，此次刷卡無效！\n");
 				User user1 = new User();
 				user1.setCardID(CardID);
 				user1.setId(Id);
 				user1.setSwipeCardTime(swipeCardTime);
 				user1.setRecord_status("6");
 				session.update("updateRawRecordStatus", user1);
+				session.update("updateRawRecordStatus",user1);
 				session.commit();
 			}
 		} else if (yesterdaygoWorkCardCount == 0) {
 			// 昨日上班卡有刷，今日下班卡沒刷 or 昨日上班卡沒刷，今日下班卡也沒刷
 			int goWorkNCardCount = session.selectOne("selectGoWorkNByCardID", userNSwipe);// 取得該員工昨日到今日有上刷的筆數(有上刷)
+			//昨日上班卡有刷，今日下班卡沒刷 or 昨日上班卡沒刷，今日下班卡也沒刷
+			int goWorkNCardCount =  session.selectOne("selectGoWorkNByCardID", userNSwipe);//取得該員工昨日到今日有上刷的筆數(有上刷)
 			if (goWorkNCardCount == 0) {
-				// 昨日無上刷
-				int isOutWoakSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate", userNSwipe);// 取得該員工從10分鐘前至現在有無下刷記錄
-				/// 10分钟以内提升重复刷卡，10分钟之后提示今日上下班已刷卡
 				if (isOutWoakSwipeDuplicate > 0) {
 					// 10分鐘前至現在有下刷記錄，進行重複刷卡處理
 					outWorkSwipeDuplicate(session, eif, CardID, swipeCardTime, yesterdayShift);
+					//10分鐘前至現在有下刷記錄，進行重複刷卡處理
+					outWorkSwipeDuplicate(session, eif, CardID,swipeCardTime,yesterdayShift);
 				} else {
 					// 10分鐘前至現在無下刷記錄
 					int outWorkNCardCount = session.selectOne("selectOutWorkByCardID", userNSwipe);// 從今天至明天該員工的刷卡記錄（無上刷，有下刷）
+					//10分鐘前至現在無下刷記錄
+					int outWorkNCardCount =  session
+							.selectOne("selectOutWorkByCardID", userNSwipe);//從今天至明天該員工的刷卡記錄（無上刷，有下刷）
 
 					if (outWorkNCardCount == 0) {
 						// 無上刷也無下刷
+						//無上刷也無下刷
 						jtextT1_1.setBackground(Color.WHITE);
 						jtextT1_1.setText("下班刷卡\n" + "ID: " + eif.getId() + "\nName: " + eif.getName() + "\n刷卡時間： "
 								+ swipeCardTime + "\n" + "昨日班別為:" + yesterdayClassDesc + "\n員工下班刷卡成功！\n------------\n");
@@ -1351,25 +1394,43 @@ public class SwipeCard extends JFrame {
 							session.insert("insertOutWorkSwipeTime", userNSwipe);
 						}
 						session.commit();
+						jtextT1_1.setText("下班刷卡\n" + "ID: " + eif.getId()
+								+ "\nName: " + eif.getName() + "\n刷卡時間： "
+								+ swipeCardTime + "\n"
+								+"昨日班別為:"+yesterdayClassDesc
+								+ "\n員工下班刷卡成功！\n------------\n");
+						session.insert("insertOutWorkSwipeTime",
+								userNSwipe);
 					} else {
 						// 無上刷有下刷
+						//無上刷有下刷
 						jtextT1_1.setBackground(Color.red);
 						jtextT1_1
 								.append("ID: " + eif.getId() + " Name: " + eif.getName() + "\n" + "今日上下班卡已刷，此次刷卡無效！\n");
+						jtextT1_1.append("ID: " + eif.getId() + " Name: "
+								+ eif.getName() + "\n"
+								+ "今日上下班卡已刷，此次刷卡無效！\n");
 						User user1 = new User();
 						user1.setCardID(CardID);
 						user1.setId(Id);
 						user1.setSwipeCardTime(swipeCardTime);
 						user1.setRecord_status("6");
 						session.update("updateRawRecordStatus", user1);
+						session.update("updateRawRecordStatus",user1);
 						session.commit();
 					}
 				}
 			} else {
 				// 昨日有上刷
+				//昨日有上刷
 				jtextT1_1.setBackground(Color.WHITE);
 				jtextT1_1.setText("下班刷卡\n" + "ID: " + eif.getId() + "\nName: " + eif.getName() + "\n刷卡時間： "
 						+ swipeCardTime + "\n昨日班別為:" + yesterdayClassDesc + "\n" + "員工下班刷卡成功！\n------------\n");
+				jtextT1_1.setText(
+						"下班刷卡\n" + "ID: " + eif.getId() + "\nName: "
+								+ eif.getName() + "\n刷卡時間： " + swipeCardTime
+								+"\n昨日班別為:"+yesterdayClassDesc
+								+ "\n" + "員工下班刷卡成功！\n------------\n");
 				session.update("updateOutWorkNSwipeTime", userNSwipe);
 			}
 			session.commit();
@@ -1379,8 +1440,10 @@ public class SwipeCard extends JFrame {
 
 	public void goWorkSwipeDuplicate(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String curShift) {
+	public void goWorkSwipeDuplicate(SqlSession session, User eif, String CardID, String swipeCardTime, String curShift) {
 
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 		String name = eif.getName();
 		String Id = eif.getId();
@@ -1400,18 +1463,23 @@ public class SwipeCard extends JFrame {
 		userSwipeDup.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 		userSwipeDup.setWorkshopNo(WorkshopNo);
 		userSwipeDup.setShift(curShift);
+		userSwipeDup.setShift(curShift);		
 		userSwipeDup.setRecord_status("5");
 		session.update("updateRawRecordStatus", userSwipeDup);
 		synchronized (this) {
 			session.insert("goWorkSwipeDuplicate", userSwipeDup);
 		}
+		session.update("updateRawRecordStatus",userSwipeDup);
+		session.insert("goWorkSwipeDuplicate", userSwipeDup);
 		session.commit();
 	}
 
 	public void outWorkSwipeDuplicate(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String curShift) {
+	public void outWorkSwipeDuplicate(SqlSession session, User eif, String CardID, String swipeCardTime, String curShift) {
 
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 		String name = eif.getName();
 		String Id = eif.getId();
@@ -1432,14 +1500,9 @@ public class SwipeCard extends JFrame {
 		userSwipeDup.setWorkshopNo(WorkshopNo);
 		userSwipeDup.setShift(curShift);
 
+		
 		userSwipeDup.setRecord_status("5");
 		userSwipeDup.setSwipeCardTime(swipeCardTime);
-		/// 将status改成5：重复刷卡
-		session.update("updateRawRecordStatus", userSwipeDup);
-		/// 将重复记录保存到testswipecardtime_ht表中
-		synchronized (this) {
-			session.insert("outWorkSwipeDuplicate", userSwipeDup);
-		}
 		session.commit();
 	}
 
@@ -1454,7 +1517,6 @@ public class SwipeCard extends JFrame {
 	}
 
 	/**
-	 * TODO 查找出一个RC_NO数组
 	 * 
 	 * @return 指示單號
 	 */
@@ -1475,15 +1537,19 @@ public class SwipeCard extends JFrame {
 					// a.add(user.get(i).getRC_NO());
 				}
 			} else {
+			}
+			else {
 				a = new Object[1];
 				a[0] = "";
 			}
 
+			
 			final Object[] s = a;
 			return a;
 		} catch (Exception e1) {
 			System.out.println("Error opening session");
 			logger.error("取得指示單號異常:" + e1);
+			logger.error("取得指示單號異常:"+e1);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e1, e1);
@@ -1497,29 +1563,39 @@ public class SwipeCard extends JFrame {
 
 	/*
 	 * 當員工刷卡時，立即記錄一筆刷卡資料至raw_record table中
+	
+	/*當員工刷卡時，立即記錄一筆刷卡資料至raw_record table中
 	 * 
 	 */
 	private void addRawSwipeRecord(SqlSession session, User eif, String CardID, String swipeCardTime,
 			String WorkshopNo) {
 		String Id = null;
+	 * */
+	private void addRawSwipeRecord(SqlSession session, User eif, String CardID, String swipeCardTime,String WorkshopNo) {
+		String Id=null;
 		try {
 			if (eif != null)
 				Id = eif.getId();
 			User newRawSwipeRecord = new User();
+			if(eif!=null)
+				Id=eif.getId();
+			User newRawSwipeRecord=new User();
 			newRawSwipeRecord.setCardID(CardID);
 			newRawSwipeRecord.setId(Id);
 			newRawSwipeRecord.setSwipeCardTime(swipeCardTime);
-			synchronized (this) {
-				session.insert("addRawSwipeRecord", newRawSwipeRecord);
-			}
 			session.commit();
 		} catch (Exception ex) {
 			logger.error("寫入原始刷卡記錄異常" + ex);
+		}
+		catch(Exception ex) {
+			logger.error("寫入原始刷卡記錄異常"+ex);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(WorkshopNo);
 			ex.printStackTrace();
 		}
 	}
+	
+	
 
 	/**
 	 * 員工刷入卡號判斷是否無記錄，並作出相應對策
@@ -1570,6 +1646,7 @@ public class SwipeCard extends JFrame {
 		}
 	}
 
+	
 	private boolean isUserContinuesWorkedOneWeek(SqlSession session, User eif, String cardID, String WorkshopNo,
 			String swipeCardTime) {
 		boolean isContinuesWorkForAWeek = false;
@@ -1587,6 +1664,7 @@ public class SwipeCard extends JFrame {
 			yesShiftUser.setId(Id);
 			yesShiftUser.setShiftDay(1);
 
+			
 			User curShiftUser = new User();
 			curShiftUser.setId(Id);
 			curShiftUser.setShiftDay(0);
@@ -1594,13 +1672,13 @@ public class SwipeCard extends JFrame {
 			User sixDayWorkerUser = new User();
 			sixDayWorkerUser.setId(Id);
 			sixDayWorkerUser.setShiftDay(7);
-			/// 通过id查询前6天工作的天数
 			workDays = session.selectOne("getOneWeekWorkDays", sixDayWorkerUser);
 
 			int empYesShiftCount = session.selectOne("getShiftCount", yesShiftUser);
 
 			int empCurShiftCount = session.selectOne("getShiftCount", curShiftUser);
 
+			
 			/*
 			 * //今天前六天的刷卡记录,即:new Date()-6 User agoSevenDayShiftUser = new
 			 * User(); agoSevenDayShiftUser.setId(Id);
@@ -1634,6 +1712,9 @@ public class SwipeCard extends JFrame {
 
 			if (empYesShiftCount > 0) {
 
+						
+			if (empYesShiftCount > 0) {				
+				
 				User empYesUSer = (User) session.selectOne("getShiftByEmpId", yesShiftUser);
 				String empYesShift = empYesUSer.getShift();
 				if (empYesShift.equals("N")) {
@@ -1662,6 +1743,7 @@ public class SwipeCard extends JFrame {
 						// 昨日夜班已存在上刷
 						if (yesterdaygoWorkCardCount == 0) { // 夜班下刷刷卡記錄不存在
 
+							
 							if (goWorkSwipeTime.before(afterClassEnd)) {
 								// 刷卡在夜班下班3.5小時之內,記為昨日夜班下刷
 								workDays = workDays - 1;
@@ -1669,6 +1751,7 @@ public class SwipeCard extends JFrame {
 
 						} else {
 							///
+
 							int isOutWorkSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate", userNSwipe);
 							if (isOutWorkSwipeDuplicate > 0) {
 								outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, empYesShift);
@@ -1677,6 +1760,7 @@ public class SwipeCard extends JFrame {
 						}
 					} else { // 昨日夜班不存在上刷
 						if (empCurShiftCount > 0) {
+						if (empCurShiftCount>0) {
 							User curYesUSer = (User) session.selectOne("getShiftByEmpId", curShiftUser);
 							String empCurShift = curYesUSer.getShift();
 							if (empCurShift.equals("N")) {
@@ -1700,10 +1784,30 @@ public class SwipeCard extends JFrame {
 										}
 									} else {
 										workDays = twoDayBeforworkDays;
+							String empCurShift=curYesUSer.getShift();
+						if (empCurShift.equals("N")) {
+							if (goWorkSwipeTime.getHours() <= 12) {
+								// 刷卡在12點前的,記為昨日夜班下刷
+								int twoDayBeforworkDays = session.selectOne("getTwoDayBeforWorkDays", sixDayWorkerUser);
+								if (twoDayBeforworkDays < 6) {
+									int outWorkNCardCount = session.selectOne("selectOutWorkByCardID", userNSwipe);// 夜班昨天无上刷，今天有下刷
+
+									/*
+									 * if (outWorkNCardCount > 0) { workDays =
+									 * workDays + 1; }
+									 */
+									int isOutWorkSwipeDuplicate = session.selectOne("isOutWorkSwipeDuplicate",
+											userNSwipe);
+									if (isOutWorkSwipeDuplicate > 0) {
+										outWorkSwipeDuplicate(session, eif, cardID, swipeCardTime, empYesShift);
+										workDays = -1;
 									}
+								} else {
+									workDays = twoDayBeforworkDays;
 								}
 							}
 						}
+					  }
 					}
 				}
 			}
@@ -1723,50 +1827,13 @@ public class SwipeCard extends JFrame {
 	}
 
 	public static void main(String args[]) {
-		boolean OneWindow = OpenOneWindow.checkLock();
-		if (OneWindow) {
-			InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18));
-			final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
-			String WorkShopNo = null;
-			if (defaultWorkshopNo != null) {
-				WorkShopNo = defaultWorkshopNo;
-				SwipeCard d = new SwipeCard(WorkShopNo);
-				CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
-				Thread executeCheckVersion = new Thread(chkVersion);
-				executeCheckVersion.start();
-			} else {
-				SwipeCardLogin d = new SwipeCardLogin();
-
-				CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
-				Thread executeCheckVersion = new Thread(chkVersion);
-				executeCheckVersion.start();
-			}
-		} else {
-			JOptionPane.showConfirmDialog(null, "程序已經開啟，請不要重複開啟", "程序重複打開", JOptionPane.DEFAULT_OPTION);
-			System.exit(0);
-		}
-		/*
-		 * InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18)); final String
-		 * defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo(); String
-		 * WorkShopNo = null; if (defaultWorkshopNo != null) { WorkShopNo =
-		 * defaultWorkshopNo; SwipeCard d = new SwipeCard(WorkShopNo);
-		 * CheckCurrentVersion chkVersion = new
-		 * CheckCurrentVersion(CurrentVersion); Thread executeCheckVersion = new
-		 * Thread(chkVersion); executeCheckVersion.start(); } else {
-		 * SwipeCardLogin d = new SwipeCardLogin();
-		 * 
-		 * CheckCurrentVersion chkVersion = new
-		 * CheckCurrentVersion(CurrentVersion); Thread executeCheckVersion = new
-		 * Thread(chkVersion); executeCheckVersion.start(); }
-		 */
-
 		// JLabelA d = new JLabelA(WorkShopNo, LineNo);
-
 	}
 
 	public void update() {
 		// String LineNo = textT1_2.getText();
 		// String WorkshopNo = textT1_1.getText();
+		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
 		Object ShiftName = comboBox2.getSelectedItem();
 		System.out.println("comboBox2" + ShiftName);
@@ -1799,4 +1866,5 @@ public class SwipeCard extends JFrame {
 		header.setFont(new Font("微软雅黑", Font.BOLD, 16));
 		header.setPreferredSize(new Dimension(header.getWidth(), 30));
 	}
+
 }
