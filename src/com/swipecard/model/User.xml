@@ -416,14 +416,14 @@
    <!-- Insert row swipe record to raw_record table -->
    <insert id="addRawSwipeRecord" parameterType="int" useGeneratedKeys="true" keyColumn="id">
 		 <if test="record_status==null">
-		     INSERT INTO `raw_record` (Id,CardID,SwipeCardTime)
+		     INSERT INTO `raw_record` (Id,CardID,SwipeCardTime,ip_address)
 			VALUES
-			(#{Id},#{CardID}, #{SwipeCardTime})
+			(#{Id},#{CardID}, #{SwipeCardTime},#{IP_ADDRESS})
 		</if>
 		<if test="record_status!=null">
-		     INSERT INTO raw_record (Id,CardID,SwipeCardTime,record_status)
+		     INSERT INTO raw_record (Id,CardID,SwipeCardTime,record_status,ip_address)
 		    VALUES
-		    (#{Id},#{CardID},#{SwipeCardTime},#{record_status})
+		    (#{Id},#{CardID},#{SwipeCardTime},#{record_status},#{IP_ADDRESS})
 	    </if>
    </insert>
      
@@ -438,6 +438,13 @@
 		    and ID is null
 		</if>
     </update>
+    
+    <select id="isAdminByCardID" parameterType="int" resultType="int">
+    	select count(*) from testemployee where
+    	 cardid=#{cardid} 
+    	 and Permission=1 
+    	 and isOnWork=0;
+    </select>
     
 </mapper>  
 
