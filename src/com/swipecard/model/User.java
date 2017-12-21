@@ -16,7 +16,10 @@ public class User {
 	private String PROD_LINE_CODE;
 	private String ACTUAL_POWER;
 	private String REMARK;
+	private String IP_ADDRESS;
 	
+	
+
 	// Table:lineno
 	private String LineNo;
 	private String WorkshopNo;
@@ -236,5 +239,12 @@ public class User {
 	public void setRecord_status(String record_status) {
 		this.record_status = record_status;
 	}
+	
+	public String getIP_ADDRESS() {
+		return IP_ADDRESS;
+	}
 
+	public void setIP_ADDRESS(String iP_ADDRESS) {
+		IP_ADDRESS = iP_ADDRESS;
+	}
 }

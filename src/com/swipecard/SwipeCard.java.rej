@@ -1,0 +1,9 @@
+diff a/src/com/swipecard/SwipeCard.java b/src/com/swipecard/SwipeCard.java	(rejected hunks)
+@@ -55,7 +55,6 @@
+ import org.apache.log4j.Logger;
+ 
+ import com.swipecard.model.User;
+-import com.swipecard.util.JsonFileUtil;
+ 
+ public class SwipeCard extends JFrame {
+ 	private static Logger logger = Logger.getLogger(SwipeCard.class);

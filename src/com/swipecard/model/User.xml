@@ -6,11 +6,11 @@
 	<select id="selectUserByRCNo" parameterType="int" resultType="User">
 		select * from `testrcline` where RC_NO = #{RC_NO}
 	</select>
-
+	<!-- 通过cardid查找testemployee的用户 -->
 	<select id="selectUserByCardID" parameterType="int" resultType="User">
 		select * from `testemployee` where CardID = #{CardID} and isOnWork=0
 	</select>
-
+	<!--  -->
 	<select id="selectUserByCardIDAndPer" parameterType="int"
 		resultType="User">
 		select * from `testemployee` where cardid = #{cardid} and
@@ -35,7 +35,7 @@
 		<!--  PROD_LINE_CODE = #{PROD_LINE_CODE}  --> 
 		  AND swipecardtime >curdate()
 	</select>
-	
+	<!-- 通过workshopNo，shift和日期在testSwipeCardTime和testemployee查找两者id相同的testSwipeCardTime的数据 -->
 	<select id="selectUserByLineNoAndWorkshopNo_DShift" parameterType="int" resultType="User">
 		SELECT a.CardID,b.ID,a.Name,a.RC_NO,a.SwipeCardTime,a.SwipeCardTime2
 		FROM testSwipeCardTime a
@@ -71,7 +71,7 @@
 		  AND date_format(swipecardtime,'%Y-%m-%d') =date_format(date_sub(curdate(),interval 1 day),'%Y-%m-%d')) a,
 		  testemployee b  where a.cardid  =b.cardid and b.isOnWork=0
 	</select>
-
+	<!-- 通过swipecardTime不为空，和班期查找swipecardtime在今天的数量 -->
 	<select id="selectCountAByCardID" parameterType="int"
 		resultType="int">
 		SELECT count(*) 
@@ -90,7 +90,7 @@
 		AND SwipeCardTime2 is not NULL 
 		and <![CDATA[ SwipeCardTime > curdate() and SwipeCardTime < adddate(curdate(), '+1 days') ]]>		
 	</select>
-	
+	<!-- 查找出该id昨天是否有下班刷卡记录 -->
 	<select id="selectCountNByCardID" parameterType='int'
 		resultType="int">
 		select count(*) from `testSwipeCardTime` where ID = #{id} 
@@ -99,7 +99,7 @@
 		AND SwipeCardTime2 is not NULL 
 		and <![CDATA[ SwipeCardTime > date_sub(curdate(),interval 1 day) and SwipeCardTime < curdate()]]>		
 	</select>
-	
+	<!-- 查找出该id昨天是否有上班刷卡记录 -->
 	<select id="selectGoWorkNByCardID" parameterType='int'
 		resultType="int">
 		select count(*) from `testSwipeCardTime` where ID = #{Id} 
@@ -140,7 +140,7 @@
     	<!-- AND WorkshopNo = #{WorkshopNo} -->
 		and <![CDATA[ date_format(SwipeCardTime,'%Y-%m-%d') = date_format(date_sub(#{SwipeCardTime2},interval 24 hour),'%Y-%m-%d')  ]]>
     </update>
-	
+	<!-- 从testSwipeCardTime找出当前id日期为今天且本次刷卡时间在swipecardtime10分钟以内的数量 -->
 	<select id="isGoWorkSwipeDuplicate" parameterType="int"
 		resultType="int">
 	   SELECT count(*) 
@@ -167,7 +167,7 @@
 		  AND SwipeCardTime is not NULL
 		  AND <![CDATA[ SwipeCardTime > curdate() and SwipeCardTime < adddate(curdate(), '+1 days') ]]>
 	</select>
-
+	<!-- 查找cur_date大于15天前日期的数据  -->
 	<select id="selectRCNo" parameterType="int" resultType="User">
 		SELECT
 		RC_NO
@@ -263,6 +263,7 @@
 		AND swipecardtime <![CDATA[>curdate()]]>
 	</update> -->
 	
+	<!-- 通过id，name和当前日期，更改testswipecardtime表中的RC_NO和PRIMARY_ITEM_NO -->
 	<update id="Update_rcno_ByLineNOandCardID" parameterType="User">
 		UPDATE testswipecardtime
 		SET RC_NO = #{RC_NO},
@@ -295,7 +296,7 @@
 		and swipecardtime > curdate()
 		
 	</select>
-	
+	<!-- 添加一个用户到lose_employee -->
 	<insert id="insertUserByNoCard" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
 <!-- 		INSERT INTO `lose_employee`
@@ -312,6 +313,7 @@
     	select count(cardid) from lose_employee where cardid=#{CardID} and swipeDate=#{swipeDate} and State=0
     </select>
     
+    <!-- 添加一个新的记录到testrcline中  -->
     <insert id="insertRCInfo" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
 		INSERT INTO `testrcline`
@@ -328,12 +330,13 @@
 		and <![CDATA[ SwipeCardTime > curdate() and SwipeCardTime < adddate(curdate(), '+1 days') ]]>
 	</select>
 	
+	
     <select id="getShiftCount" parameterType="int"
 		resultType="int">
 		select count(*) from emp_class a,classno b 
 		where a.class_no=b.class_no  and id=#{id}  and  a.emp_date = date_sub(curdate(),interval #{shiftDay} day)
 	</select>
-	
+	<!-- CONCAT_WS用来拼接字符的  -->
     <select id="getShiftByEmpId" parameterType="int"
 		resultType="User">
 		select a.id,a.emp_date,a.class_no,b.class_desc,b.shift,
@@ -391,7 +394,7 @@
            AND ID = #{Id})
            ) c 
    </select>
-   
+   <!-- 通过id找出工作超过6天数量 -->
        <!-- Check Continues workers(N days) -->
       <select id="getOneWeekWorkDays" parameterType="User" resultType="int">
          SELECT count(*) FROM testswipecardtime where 
@@ -401,7 +404,7 @@
            AND ID = #{Id}
    </select> 
    
-         <select id="getTwoDayBeforWorkDays" parameterType="User" resultType="int">
+   <select id="getTwoDayBeforWorkDays" parameterType="User" resultType="int">
          SELECT count(*) FROM testswipecardtime where 
          <![CDATA[
            DATE_FORMAT(swipecardtime, '%Y%m%d') > DATE_SUB(curdate(),INTERVAL 8 DAY) 
@@ -414,17 +417,19 @@
    	{call swipecard.VALIDATE_ON_DUTY_TIME(#{onDutyTime,jdbcType=DATE,javaType=DATE,mode=IN}),#{empID,jdbcType=VARCHAR,javaType=STRING,mode=IN},#{isOnDutyTimeValid,jdbcType=INTEGER,javaType=int,mode=out})}
    </select>
    <!-- Insert row swipe record to raw_record table -->
+   <!-- 添加一条数据到raw_record中 -->
    <insert id="addRawSwipeRecord" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO `raw_record` (Id,CardID,SwipeCardTime,update_time)
+		INSERT INTO `raw_record` (Id,CardID,SwipeCardTime,update_time,ip_address)
 		VALUES
-		(#{Id},#{CardID}, #{SwipeCardTime},sysdate())
+		(#{Id},#{CardID}, #{SwipeCardTime},sysdate() ,#{IP_ADDRESS})
    </insert>
      
    	<update id="updateRawRecordStatus" parameterType="User">
     	update `raw_record` set record_status = #{record_status}
     	WHERE CardID=#{CardID}
 		and DATE_FORMAT(swipecardtime, '%Y-%m-%d %H:%i:%S') = #{SwipeCardTime}
+		<!-- 判断id是否为空 -->
 		<if test="Id!=null">
 		    and ID = #{Id}
 		</if>
@@ -432,6 +437,13 @@
 		    and ID is null
 		</if>
     </update>
+    
+    <select id="isAdminByCardID" parameterType="int" resultType="int">
+    	select count(*) from testemployee where
+    	 cardid=#{cardid} 
+    	 and Permission=1 
+    	 and isOnWork=0;
+    </select>
     
 </mapper>  
 
