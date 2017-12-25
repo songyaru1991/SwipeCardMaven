@@ -645,10 +645,24 @@ public class SwipeCard extends JFrame {
 		});
 
 		// TODO 刷卡模式
-		textT1_3.addTextListener(new TextListener() {
-
+		textT1_3.addKeyListener(new KeyListener() {
+			
 			@Override
-			public void textValueChanged(TextEvent e) {
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void keyPressed(KeyEvent e) {
+				// TODO Auto-generated method stub
+				if(e.getKeyChar() == KeyEvent.VK_ENTER){
 				SqlSession session = sqlSessionFactory.openSession();
 
 				String CardID = textT1_3.getText();
@@ -663,6 +677,10 @@ public class SwipeCard extends JFrame {
 				if (CardID.length() > 10) {
 					jtextT1_1.setBackground(Color.RED);
 					jtextT1_1.setText("卡號輸入有誤，請再次刷卡\n");
+					textT1_3.setText("");
+				} else if(CardID.length()<10){
+					jtextT1_1.setBackground(Color.RED);
+					jtextT1_1.setText("無效卡號！\n");
 					textT1_3.setText("");
 				} else {
 					String pattern = "^[0-9]\\d{9}$";
@@ -920,6 +938,7 @@ public class SwipeCard extends JFrame {
 						System.out.println("無輸入內容或輸入錯誤!");
 					}
 				}
+			}
 			}
 		});
 
@@ -1475,26 +1494,22 @@ public class SwipeCard extends JFrame {
 					e.printStackTrace();
 				}
 				InetAddress ip = null;
-				String ipv4 = null;
+				String ipv4 = "";
 				while (allNetInterfaces.hasMoreElements()) {
 					NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
 //					System.out.println(netInterface.getName());
 					Enumeration addresses = netInterface.getInetAddresses();
 					while (addresses.hasMoreElements()) {
 						ip = (InetAddress) addresses.nextElement();
-						String str = "192.168";
 						if (ip != null && ip instanceof Inet4Address) {
 							if(ip.getHostAddress().equals("127.0.0.1")){  
 		                        continue;  
 		                    }
-							if(ip.getHostAddress().contains(str)){
-								continue;
-							}
-							return ip.getHostAddress(); 
+							ipv4 += ip.getHostAddress()+"/";
 						}
 					}
 				}
-				return null;
+				return ipv4;
 	}
 
 	/**
