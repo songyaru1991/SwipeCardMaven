@@ -1484,7 +1484,7 @@ public class SwipeCard extends JFrame {
 	
 	
 
-	private String getLocalIp() {
+	private static String getLocalIp() {
 		// TODO Auto-generated method stub
 				Enumeration allNetInterfaces = null;
 				try {
@@ -1735,6 +1735,11 @@ public class SwipeCard extends JFrame {
 			if (defaultWorkshopNo != null) {
 				WorkShopNo = defaultWorkshopNo;
 				SwipeCard d = new SwipeCard(WorkShopNo);
+				//檢測ip是否可用
+				String ip = getLocalIp();
+				CheckIp checkIp = new CheckIp(ip);
+				Thread executeCheckIp = new Thread(checkIp);
+				executeCheckIp.start();
 				CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
 				Thread executeCheckVersion = new Thread(chkVersion);
 				executeCheckVersion.start();
