@@ -74,6 +74,7 @@ public class CheckIp implements Runnable{
 		} catch (Exception e) {
 			System.out.println("Error opening session");
 			logger.error("获取通用ip异常，原因:"+e);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
 			ErrorContext.instance().reset();
