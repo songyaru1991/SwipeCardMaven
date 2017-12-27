@@ -17,6 +17,7 @@ public class User {
 	private String ACTUAL_POWER;
 	private String REMARK;
 	private String IP_ADDRESS;
+	private String com_ip;
 	
 
 
@@ -246,6 +247,14 @@ public class User {
 
 	public void setIP_ADDRESS(String iP_ADDRESS) {
 		IP_ADDRESS = iP_ADDRESS;
+	}
+	
+	public String getCom_ip() {
+		return com_ip;
+	}
+
+	public void setCom_ip(String com_ip) {
+		this.com_ip = com_ip;
 	}
 
 }
