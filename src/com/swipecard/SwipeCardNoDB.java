@@ -14,6 +14,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
@@ -91,7 +95,7 @@ public class SwipeCardNoDB extends JFrame {
 		@Override
 		public void run() {
 			PingMySqlUtil PingUtil = new PingMySqlUtil();
-		    String ipAddress = "127.0.0.1";
+		    String ipAddress = "192.168.60.111";
 	        try {
 				 // System.out.println(PingUtil.ping(ipAddress));
 				 // PingUtil.ping02(ipAddress);
@@ -272,6 +276,7 @@ public class SwipeCardNoDB extends JFrame {
 				String swipeCardTime = DateGet.getTime();
 				//String selectWorkShopNo = comboBox1.getSelectedItem().toString();
 				String selectWorkShopNo = jtf1.getText();
+				String ip = SwipeCardNoDB.getLocalIp();
 				JSONObject swipeCardRecord = new JSONObject();
 
 				// 驗證是否為10位整數，是則繼續執行，否則提示
@@ -297,8 +302,10 @@ public class SwipeCardNoDB extends JFrame {
 
 							swipeData.put("CardID", CardID);
 							swipeData.put("swipeCardTime", swipeCardTime);
+							swipeData.put("ip_address", ip);
 							swipeCardData.put(swipeData);
 							swipeCardRecord.put("SwipeData", swipeCardData);
+							
 
 							if (!file.getParentFile().exists()) {
 								file.getParentFile().mkdirs();
@@ -358,6 +365,34 @@ public class SwipeCardNoDB extends JFrame {
 		// textT1_1.setText(WorkshopNo);// 綁定車間
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	private static String getLocalIp() {
+		// TODO Auto-generated method stub
+				Enumeration allNetInterfaces = null;
+				try {
+					allNetInterfaces = NetworkInterface.getNetworkInterfaces();
+				} catch (SocketException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				InetAddress ip = null;
+				String ipv4 = "";
+				while (allNetInterfaces.hasMoreElements()) {
+					NetworkInterface netInterface = (NetworkInterface) allNetInterfaces.nextElement();
+//					System.out.println(netInterface.getName());
+					Enumeration addresses = netInterface.getInetAddresses();
+					while (addresses.hasMoreElements()) {
+						ip = (InetAddress) addresses.nextElement();
+						if (ip != null && ip instanceof Inet4Address) {
+							if(ip.getHostAddress().equals("127.0.0.1")){  
+		                        continue;  
+		                    }
+							ipv4 += ip.getHostAddress()+"/";
+						}
+					}
+				}
+				return ipv4;
 	}
 
 	private static void InitGlobalFont(Font font) {
