@@ -116,9 +116,12 @@ public class CheckIp implements Runnable{
 			}
 			
 			for (Object object : Eip) {
-				if(str.contains((String)object)){
-					return true;
+				if(!(object == null || object.equals(""))){
+					if(str.contains((String)object)){
+						return true;
+					}
 				}
+				
 			}
 			
 			for (Object object : Cip) {
