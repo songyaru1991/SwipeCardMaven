@@ -1738,15 +1738,7 @@ public class SwipeCard extends JFrame {
 
 	public static void main(String args[]) {
 		boolean OneWindow = OpenOneWindow.checkLock();
-		//檢測ip是否可用
-		String ip = getLocalIp();
-		CheckIp checkIp = new CheckIp(ip);
-		Thread executeCheckIp = new Thread(checkIp);
-		executeCheckIp.start();
-		//检测版本是否最新
-		CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
-		Thread executeCheckVersion = new Thread(chkVersion);
-		executeCheckVersion.start();
+		
 		if (OneWindow) {
 			InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18));
 			final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
@@ -1754,10 +1746,18 @@ public class SwipeCard extends JFrame {
 			if (defaultWorkshopNo != null) {
 				WorkShopNo = defaultWorkshopNo;
 				SwipeCard d = new SwipeCard(WorkShopNo);
-				
 			} else {
 				SwipeCardLogin d = new SwipeCardLogin();
 			}
+			//檢測ip是否可用
+			String ip = getLocalIp();
+			CheckIp checkIp = new CheckIp(ip);
+			Thread executeCheckIp = new Thread(checkIp);
+			executeCheckIp.start();
+			//检测版本是否最新
+			CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
+			Thread executeCheckVersion = new Thread(chkVersion);
+			executeCheckVersion.start();
 		} else {
 			JOptionPane.showConfirmDialog(null, "程序已經開啟，請不要重複開啟", "程序重複打開", JOptionPane.DEFAULT_OPTION);
 			System.exit(0);
