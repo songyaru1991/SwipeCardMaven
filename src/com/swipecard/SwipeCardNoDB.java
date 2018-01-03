@@ -91,7 +91,7 @@ public class SwipeCardNoDB extends JFrame {
 		@Override
 		public void run() {
 			PingMySqlUtil PingUtil = new PingMySqlUtil();
-		    String ipAddress = "192.168.60.111";
+		    String ipAddress = "127.0.0.1";
 	        try {
 				 // System.out.println(PingUtil.ping(ipAddress));
 				 // PingUtil.ping02(ipAddress);
@@ -101,10 +101,10 @@ public class SwipeCardNoDB extends JFrame {
 			        String selectWorkShopNo = jtf1.getText();
 					if(PingUtil.ping(ipAddress, 5, 5000))
 					{
-						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+						dispose();
 						SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
 						logToDB.SwipeRecordLogToDB();
-						dispose();
+						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
 					    this.cancel();
 					}
 					
