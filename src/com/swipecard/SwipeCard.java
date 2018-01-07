@@ -1773,7 +1773,7 @@ public class SwipeCard extends JFrame {
 			}
 			if (defaultWorkshopNo != null) {
 				WorkShopNo = defaultWorkshopNo;
-				SwipeCard d = new SwipeCard(WorkShopNo,null);
+				SwipeCard d = new SwipeCard(WorkShopNo,LineNo);
 			} else {
 				SwipeCardLogin d = new SwipeCardLogin();
 			}
