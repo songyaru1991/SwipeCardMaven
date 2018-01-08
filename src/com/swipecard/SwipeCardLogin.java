@@ -78,13 +78,13 @@ public class SwipeCardLogin extends JFrame {
 
 	final Object[] WorkshopNo = getWorkshopNo();
 	final Object[] LineLeader = getLineLeader();
-
+	Object[] lineno = null;
 	private JPanel panel1;
 	private JLabel label1, label2, label3;
 	static JPasswordField text1;
 	static JTextField jtf1, jtf3;
 	private MyJButton but1;
-	static JComboBox comboBox1;
+	static JComboBox comboBox1,comboBox2;
 
 	public SwipeCardLogin() {
 		super("管理人員登陸-" + CurrentVersion);
@@ -118,7 +118,7 @@ public class SwipeCardLogin extends JFrame {
 		but1.setFont(new Font("微软雅黑", Font.BOLD, 18));
 		label2.setBounds(120, 200, 100, 30);
 		text1.setBounds(220, 200, 160, 40);
-		but1.setBounds(240, 300, 120, 40);
+		but1.setBounds(240, 340, 120, 40);
 
 		label3.setBounds(120, 120, 100, 30);
 		comboBox1.setBounds(220, 120, 160, 40);
@@ -127,6 +127,22 @@ public class SwipeCardLogin extends JFrame {
 			panel1.add(label2);
 			panel1.add(text1);
 		}
+		// 新增label
+		JLabel label = new JLabel("線號：");
+		label.setBounds(120, 276, 54, 24);
+		panel1.add(label);
+		// 新增下拉控件
+		comboBox2 = new JComboBox();
+		comboBox2.setBounds(220, 273, 160, 40);
+		lineno = getLineno(comboBox1.getSelectedItem().toString());
+		if (lineno != null) {
+			for (Object object : lineno) {
+				comboBox2.addItem(object);
+			}
+		} else {
+			comboBox2.addItem("不需要選擇線號");
+		}
+		panel1.add(comboBox2);
 
 		panel1.add(label1);
 		panel1.add(label3);
@@ -158,9 +174,48 @@ public class SwipeCardLogin extends JFrame {
 
 				if (e.getStateChange() == ItemEvent.SELECTED) {
 					String key = jtf1.getText();
+					lineno = getLineno(comboBox1.getSelectedItem().toString());
+					comboBox2.removeAllItems();
+					if(lineno != null){
+						for (Object object : lineno) {
+							comboBox2.addItem(object);
+						}
+					}else{
+						comboBox2.addItem("不需要選擇線號");
+					}
 				}
 			}
 		});
+	}
+	
+	public Object[] getLineno(String selectWorkshopNo) {// TODO
+		String linenoList;
+		Object[] a = null;
+		Object[] s = null;
+		System.out.println(selectWorkshopNo);
+		try {
+			SqlSession session = sqlSessionFactory.openSession();
+			linenoList = session.selectOne("selectLineNo", selectWorkshopNo);
+			System.out.println(linenoList);
+			if (!(linenoList == null || linenoList.equals(""))) {
+				s = linenoList.split(",");
+				int con = s.length;
+				a = new Object[con + 1];
+				a[0] = "請選擇線號";
+				for (int i = 1; i < con + 1; i++) {
+					a[i] = s[i - 1];
+				}
+			}
+		} catch (Exception e) {
+			System.out.println("Error opening session");
+			logger.error("取得線號異常,原因" + e);
+			dispose();
+			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
+			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
+		} finally {
+			ErrorContext.instance().reset();
+		}
+		return a;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -312,9 +367,16 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 				Matcher m = r.matcher(CardID);
 				// String WorkshopNo = SwipeCardLogin.jtf1.getText();
 				String selectWorkShopNo = adaptee.comboBox1.getSelectedItem().toString();
+				String selectLineNo = adaptee.comboBox2.getSelectedItem().toString();
 				if (selectWorkShopNo.equals("--請選擇車間--")) {
 					JOptionPane.showMessageDialog(adaptee, "請選擇車間!");
 				} else {
+					if(selectLineNo.equals("請選擇線號")){
+						JOptionPane.showMessageDialog(adaptee, "請選擇線號!");
+					}else{
+						if(selectLineNo == "不需要選擇線號"){
+							selectLineNo = null;
+						}
 					if (m.matches() == true) {
 						Object[] a = adaptee.LineLeader;
 						/*
@@ -331,8 +393,16 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 							JSONObject selectWorkshopNoJson = new JSONObject();
 							selectWorkshopNoJson.put("workshopNo", selectWorkShopNo);
 							jsonFileUtil.saveSelectWorkshopNo(selectWorkshopNoJson.toString(), fileName);
+							String lfileName = "saveLineNo.json";
+							if(selectLineNo != null){
+								JSONObject selectLineNoJson = new JSONObject();
+								selectLineNoJson.put("lineNo", selectLineNo);
+								jsonFileUtil.saveSelectWorkshopNo(selectLineNoJson.toString(), lfileName);
+							}else{
+								jsonFileUtil.deleteSaveLineNo(lfileName);
+							}
 							adaptee.dispose();
-							SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+							SwipeCard swipe = new SwipeCard(selectWorkShopNo,selectLineNo);
 							 System.out.println("WorkShopNo: " +
 							 selectWorkShopNo);
 						} else {
@@ -342,6 +412,7 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 					} else {
 						JOptionPane.showMessageDialog(adaptee, "不合法卡號");
 						System.out.println("不合法卡號，含有非數字字符或卡號長度不正確");
+					}
 					}
 				}
 			} catch (JSONException e1) {
@@ -358,9 +429,16 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 				Matcher m = r.matcher(CardID);*/
 				// String WorkshopNo = SwipeCardLogin.jtf1.getText();
 				String selectWorkShopNo = adaptee.comboBox1.getSelectedItem().toString();
+				String selectLineNo = adaptee.comboBox2.getSelectedItem().toString();
 				if (selectWorkShopNo.equals("--請選擇車間--")) {
 					JOptionPane.showMessageDialog(adaptee, "請選擇車間!");
 				} else {
+					if(selectLineNo.equals("請選擇線號")){
+						JOptionPane.showMessageDialog(adaptee, "請選擇線號!");
+					}else{
+						if(selectLineNo == "不需要選擇線號"){
+							selectLineNo = null;
+						}
 					/*if (m.matches() == true) {*/
 //						Object[] a = adaptee.LineLeader;
 						/*
@@ -377,8 +455,16 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 							JSONObject selectWorkshopNoJson = new JSONObject();
 							selectWorkshopNoJson.put("workshopNo", selectWorkShopNo);
 							jsonFileUtil.saveSelectWorkshopNo(selectWorkshopNoJson.toString(), fileName);
+							String lfileName = "saveLineNo.json";
+							if(selectLineNo != null){
+								JSONObject selectLineNoJson = new JSONObject();
+								selectLineNoJson.put("lineNo", selectLineNo);
+								jsonFileUtil.saveSelectWorkshopNo(selectLineNoJson.toString(), lfileName);
+							}else{
+								jsonFileUtil.deleteSaveLineNo(lfileName);
+							}
 							adaptee.dispose();
-							SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+							SwipeCard swipe = new SwipeCard(selectWorkShopNo,selectLineNo);
 							// System.out.println("WorkShopNo: " +
 							// selectWorkShopNo);
 						/*} else {
@@ -389,6 +475,7 @@ class TextFrame_jButton1_actionAdapter implements ActionListener {
 						JOptionPane.showMessageDialog(adaptee, "不合法卡號");
 						System.out.println("不合法卡號，含有非數字字符或卡號長度不正確");
 					}*/
+					}
 				}
 			} catch (JSONException e1) {
 				// TODO Auto-generated catch block

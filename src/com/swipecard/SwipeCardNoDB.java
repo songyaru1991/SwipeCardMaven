@@ -108,7 +108,7 @@ public class SwipeCardNoDB extends JFrame {
 						dispose();
 						SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
 						logToDB.SwipeRecordLogToDB();
-						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+						SwipeCard swipe = new SwipeCard(selectWorkShopNo,null);
 					    this.cancel();
 					}
 					
