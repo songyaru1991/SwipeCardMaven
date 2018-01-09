@@ -101,10 +101,10 @@ public class SwipeCardNoDB extends JFrame {
 			        String selectWorkShopNo = jtf1.getText();
 					if(PingUtil.ping(ipAddress, 5, 5000))
 					{
-						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
+						dispose();
 						SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
 						logToDB.SwipeRecordLogToDB();
-						dispose();
+						SwipeCard swipe = new SwipeCard(selectWorkShopNo);
 					    this.cancel();
 					}
 					
@@ -334,7 +334,7 @@ public class SwipeCardNoDB extends JFrame {
 							jtextT1_1.setText("卡號為:" + CardID + "的員工\n" + swipeCardTime + "刷卡成功！\n");
 
 						} catch (IOException e1) {
-							logger.error("ping DB ip時異常，原因:"+e1);
+							logger.error("無DB刷卡時異常，原因:"+e1);
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						} catch (JSONException e1) {
