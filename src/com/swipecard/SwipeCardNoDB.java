@@ -59,6 +59,10 @@ public class SwipeCardNoDB extends JFrame {
 	private String DEFAULT_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	private String time;
 	private int ONE_SECOND = 1000;
+	JsonFileUtil jsonFileUtil = new JsonFileUtil();
+	final JSONObject LineNoObject = jsonFileUtil.getLineNoByJson();
+	Object[] lineno = null;
+	final String defaultLineNo = jsonFileUtil.getSaveLineNo();
 
 	static JTabbedPane tabbedPane;
 	static JLabel label1, label3, swipeTimeLable, curTimeLable;
@@ -70,7 +74,7 @@ public class SwipeCardNoDB extends JFrame {
 	static TextField textT1_3, textT1_1;
 	static JScrollPane jspT1_1, JspTable, myScrollPane;
 	Textc textc = null;
-	static JComboBox comboBox1;
+	static JComboBox comboBox1,comboBox2;
 	static JTextField jtf1;
 
 	/**
@@ -103,12 +107,16 @@ public class SwipeCardNoDB extends JFrame {
 			        
 			       // String selectWorkShopNo = comboBox1.getSelectedItem().toString();
 			        String selectWorkShopNo = jtf1.getText();
+			        String selectLineNo = comboBox2.getSelectedItem().toString();
+			        if(selectLineNo == "不需要選擇線號"){
+						selectLineNo=null;
+					}
 					if(PingUtil.ping(ipAddress, 5, 5000))
 					{
 						dispose();
 						SwipeRecordLogToDB logToDB=new SwipeRecordLogToDB();
 						logToDB.SwipeRecordLogToDB();
-						SwipeCard swipe = new SwipeCard(selectWorkShopNo,null);
+						SwipeCard swipe = new SwipeCard(selectWorkShopNo,selectLineNo);
 					    this.cancel();
 					}
 					
@@ -222,6 +230,25 @@ public class SwipeCardNoDB extends JFrame {
 
 		butT1_5.setBounds(x6, 350 + y1 + 20, x5, y1);
 		butT1_6.setBounds(x6 + 160, 350 + y1 + 20, x5, y1);
+		JLabel label = new JLabel("線號：");
+		label.setBounds(35, 281, 75, 24);
+		label.setFont(new Font("微软雅黑", Font.BOLD, 25));
+		panel1.add(label);
+		comboBox2 = new JComboBox();
+		comboBox2.setBounds(114, 273, 271, 40);
+		comboBox2.setEditable(true);
+		lineno = getLineno(comboBox1.getSelectedItem().toString());
+		if (lineno != null) {
+			for (Object object : lineno) {
+				comboBox2.addItem(object);
+			}
+		} else {
+			comboBox2.addItem("不需要選擇線號");
+		}
+		if (defaultLineNo != null) {
+			comboBox2.setSelectedItem(defaultLineNo);
+		}
+		panel1.add(comboBox2);
 		panel1.add(comboBox1);
 		// panel1.add(textT1_1);
 		panel1.add(textT1_3);
@@ -365,6 +392,24 @@ public class SwipeCardNoDB extends JFrame {
 		// textT1_1.setText(WorkshopNo);// 綁定車間
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
+	public Object[] getLineno(String selectWorkshopNo) {// TODO
+		String linenoList;
+		Object[] a = null;
+		Object[] s = null;
+		System.out.println(selectWorkshopNo);
+		linenoList = LineNoObject.getString(selectWorkshopNo);
+		System.out.println(linenoList);
+		if (!(linenoList == null || linenoList.equals(""))) {
+			s = linenoList.split(",");
+			int con = s.length;
+			a = new Object[con];
+			for (int i = 1; i < con + 1; i++) {
+				a[i - 1] = s[i - 1].toString().trim();
+			}
+		}
+		return a;
 	}
 	
 	private static String getLocalIp() {

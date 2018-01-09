@@ -78,6 +78,7 @@ public class SwipeCardLogin extends JFrame {
 
 	final Object[] WorkshopNo = getWorkshopNo();
 	final Object[] LineLeader = getLineLeader();
+	final JSONObject LineNoObject = getLineNoObject();
 	Object[] lineno = null;
 	private JPanel panel1;
 	private JLabel label1, label2, label3;
@@ -188,32 +189,49 @@ public class SwipeCardLogin extends JFrame {
 		});
 	}
 	
-	public Object[] getLineno(String selectWorkshopNo) {// TODO
-		String linenoList;
-		Object[] a = null;
-		Object[] s = null;
-		System.out.println(selectWorkshopNo);
+	private JSONObject getLineNoObject() {
+		// TODO Auto-generated method stub
+		List<User> user;
+		JSONObject jsonObject = new JSONObject();
 		try {
 			SqlSession session = sqlSessionFactory.openSession();
-			linenoList = session.selectOne("selectLineNo", selectWorkshopNo);
-			System.out.println(linenoList);
-			if (!(linenoList == null || linenoList.equals(""))) {
-				s = linenoList.split(",");
-				int con = s.length;
-				a = new Object[con + 1];
-				a[0] = "請選擇線號";
-				for (int i = 1; i < con + 1; i++) {
-					a[i] = s[i - 1];
+			user = session.selectList("selectLineNoList");
+			int con = user.size();
+			if (con > 0) {
+				for (int i = 0; i < con; i++) {
+					jsonObject.put(user.get(i).getWorkshopNo(), user.get(i).getLineNo());
 				}
+				String fileName = "LineNo.json";
+				jsonFileUtil.createWorkshopNoJsonFile(jsonObject.toString(), fileName);
 			}
 		} catch (Exception e) {
 			System.out.println("Error opening session");
-			logger.error("取得線號異常,原因" + e);
+			logger.error("取得线体異常,原因" + e);
 			dispose();
 			SwipeCardNoDB d = new SwipeCardNoDB(defaultWorkshopNo);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
 			ErrorContext.instance().reset();
+		}
+		System.out.println(jsonObject);
+		return jsonObject;
+	}
+	
+	public Object[] getLineno(String selectWorkshopNo) {// TODO
+		String linenoList;
+		Object[] a = null;
+		Object[] s = null;
+		System.out.println(selectWorkshopNo);
+		linenoList = LineNoObject.getString(selectWorkshopNo);
+		System.out.println(linenoList);
+		if (!(linenoList == null || linenoList.equals(""))) {
+			s = linenoList.split(",");
+			int con = s.length;
+			a = new Object[con + 1];
+			a[0] = "請選擇線號";
+			for (int i = 1; i < con + 1; i++) {
+				a[i] = s[i - 1];
+			}
 		}
 		return a;
 	}

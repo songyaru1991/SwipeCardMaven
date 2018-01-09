@@ -452,9 +452,8 @@
  		control_except = #{control_except};
     </select>
     
-    <select id="selectLineNo" parameterType="java.lang.String" resultType="String">
-    	SELECT LineNo from lineno where 
-    	workshopno = #{workshopno};
+    <select id="selectLineNoList" resultType="User">
+    	SELECT workshopno,lineno from lineno;
     </select>
     
 </mapper>  
