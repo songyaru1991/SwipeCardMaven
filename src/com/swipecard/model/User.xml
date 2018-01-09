@@ -128,9 +128,9 @@
     
 	<insert id="insertOutWorkSwipeTime" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO `testSwipeCardTime` (CardID,ID, Name,SwipeCardTime2,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT)
+		INSERT INTO `testSwipeCardTime` (CardID,ID, Name,SwipeCardTime2,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT,Prod_Line_Code)
 		VALUES
-		(#{CardID},#{Id}, #{Name}, #{SwipeCardTime2}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift})
+		(#{CardID},#{Id}, #{Name}, #{SwipeCardTime2}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift},#{PROD_LINE_CODE})
     </insert>
     
 	 <update id="updateOutWorkNSwipeTime" parameterType="User">
@@ -204,23 +204,23 @@
     
     <insert id="insertUserByOnDNShift" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO `testSwipeCardTime` (CardID,ID, Name,SwipeCardTime,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT)
+		INSERT INTO `testSwipeCardTime` (CardID,ID, Name,SwipeCardTime,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT,Prod_Line_Code)
 		VALUES
-		(#{CardID}, #{Id}, #{Name}, #{SwipeCardTime}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift})
+		(#{CardID}, #{Id}, #{Name}, #{SwipeCardTime}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift},#{PROD_LINE_CODE})
     </insert>
     
      <insert id="goWorkSwipeDuplicate" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO `testswipecardtime_ht` (Id,CardID, Name,SwipeCardTime,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT)
+		INSERT INTO `testswipecardtime_ht` (Id,CardID, Name,SwipeCardTime,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT,Prod_Line_Code)
 		VALUES
-		(#{Id},#{CardID}, #{Name}, #{SwipeCardTime}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift})
+		(#{Id},#{CardID}, #{Name}, #{SwipeCardTime}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift},#{PROD_LINE_CODE})
     </insert>
     
      <insert id="outWorkSwipeDuplicate" parameterType="int" useGeneratedKeys="true"
 		keyColumn="id">
-		INSERT INTO `testswipecardtime_ht` (Id,CardID, Name,SwipeCardTime2,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT)
+		INSERT INTO `testswipecardtime_ht` (Id,CardID, Name,SwipeCardTime2,WorkshopNo,PRIMARY_ITEM_NO, RC_NO,SHIFT,Prod_Line_Code)
 		VALUES
-		(#{Id},#{CardID}, #{Name}, #{SwipeCardTime2}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift})
+		(#{Id},#{CardID}, #{Name}, #{SwipeCardTime2}, #{WorkshopNo}, #{PRIMARY_ITEM_NO}, #{RC_NO}, #{Shift},#{PROD_LINE_CODE})
      </insert>
     
     <update id="updateChangeLineUserByOnDuty" parameterType="User">
@@ -450,6 +450,10 @@
     	SELECT com_ip 
 		FROM app_login_control WHERE
  		control_except = #{control_except};
+    </select>
+    
+    <select id="selectLineNoList" resultType="User">
+    	SELECT workshopno,lineno from lineno;
     </select>
     
 </mapper>  

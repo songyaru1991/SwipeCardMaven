@@ -446,6 +446,12 @@
     	 and isOnWork=0;
     </select>
     
+    <select id="getIpByControl_except" parameterType="java.lang.String" resultType="User">
+    	SELECT com_ip 
+		FROM app_login_control WHERE
+ 		control_except = #{control_except};
+    </select>
+    
 </mapper>  
 
 

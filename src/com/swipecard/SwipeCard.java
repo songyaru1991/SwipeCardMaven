@@ -27,6 +27,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -59,6 +60,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.log4j.Logger;
 
 import com.swipecard.model.User;
+import com.swipecard.util.DESUtils;
 import com.swipecard.util.JsonFileUtil;
 
 
@@ -78,7 +80,7 @@ public class SwipeCard extends JFrame {
 	static JLabel labelS1, labelS2, labelS3;
 	static JPanel panel1, panel2, panel3;
 	static ImageIcon image;
-	static JLabel labelT2_1, labelT2_2, labelT2_3, labelT1_1,workShopNoJlabel, labelT1_3, labelT1_5, labelT1_6, label;
+	static JLabel labelT2_1, labelT2_2, labelT2_3, labelT1_1,workShopNoJlabel, labelT1_3, labelT1_5, labelT1_6, label,linenoLabel,labelT1_4;
 	static JComboBox comboBox, comboBox2;
 	static MyJButton butT1_3, butT1_4, butT1_5, butT1_6, butT2_1, butT2_2, butT2_3, butT1_7, butT2_rcno;
 	static JTextArea jtextT1_1, jtextT1_2;
@@ -92,17 +94,26 @@ public class SwipeCard extends JFrame {
 	Textc textc = null;
 	static JsonFileUtil jsonFileUtil = new JsonFileUtil();
 	final static String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
+	final static  String defaultLineNo = jsonFileUtil.getSaveLineNo();
 	static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
+	
+	static Properties pps = new Properties();
+	static Reader pr = null;
 	static {
 		try {
+			pr = Resources.getResourceAsReader("db.properties");
+			pps.load(pr);
+			pps.setProperty("username", DESUtils.getDecryptString(pps.getProperty("username")));
+			pps.setProperty("password", DESUtils.getDecryptString(pps.getProperty("password")));
+			
 			reader = Resources.getResourceAsReader("Configuration.xml");
 			/*
 			 * String filePath = System.getProperty("user.dir") +
 			 * "/Configuration.xml"; FileReader reader = new
 			 * FileReader(filePath);
 			 */
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,pps);
 		} catch (Exception e) {
 			logger.error("Error opening session:"+e);
 			
@@ -128,7 +139,7 @@ public class SwipeCard extends JFrame {
 		}
 	}
 
-	public SwipeCard(final String WorkshopNo) {
+	public SwipeCard(final String WorkshopNo, String LineNo) {
 
 		super("產線端刷卡程式-"+CurrentVersion);
 		
@@ -944,6 +955,20 @@ public class SwipeCard extends JFrame {
 
 		c.add(tabbedPane);
 		c.setBackground(Color.lightGray);
+		linenoLabel = new JLabel("線號");
+		linenoLabel.setBounds(105, 236, 277, 40);
+		linenoLabel.setFont(new Font("微软雅黑", Font.BOLD, 25));
+		panel1.add(linenoLabel);
+		labelT1_4 = new JLabel("線號：");
+		labelT1_4.setBounds(35, 236, 90, 40);
+		labelT1_4.setFont(new Font("微软雅黑", Font.BOLD, 25));
+		panel1.add(labelT1_4);
+		if(LineNo == null || LineNo.equals("")){
+			linenoLabel.setText("");
+			labelT1_4.setVisible(false);
+		}else{
+			linenoLabel.setText(LineNo);
+		}
 
 		//textT1_1.setText(WorkshopNo);// 綁定車間
 		workShopNoJlabel.setText(WorkshopNo);
@@ -1031,6 +1056,7 @@ public class SwipeCard extends JFrame {
 						String name = eif.getName();
 						String RC_NO = jtf.getText();
 						String PRIMARY_ITEM_NO = textT2_1.getText();
+						String PROD_LINE_CODE = linenoLabel.getText();
 
 						User userSwipe = new User();
 						String SwipeCardTime2 = swipeCardTime;
@@ -1042,6 +1068,7 @@ public class SwipeCard extends JFrame {
 						userSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 						userSwipe.setShift(curShift);
 						userSwipe.setWorkshopNo(WorkshopNo);
+						userSwipe.setPROD_LINE_CODE(PROD_LINE_CODE);
 
 						int curDayGoWorkCardCount =  session.selectOne("selectCountAByCardID", userSwipe);
 
@@ -1148,7 +1175,7 @@ public class SwipeCard extends JFrame {
 		String Id = eif.getId();
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
-		//更換date_formatyyyy-MM-dd HH:mm:ss.SSS  
+		String PROD_LINE_CODE = linenoLabel.getText();
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	    try {
 
@@ -1185,6 +1212,7 @@ public class SwipeCard extends JFrame {
 				user1.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 				user1.setWorkshopNo(WorkshopNo);
 				user1.setShift(curShift);
+				user1.setPROD_LINE_CODE(PROD_LINE_CODE);
 				synchronized (this){
 				session.insert("insertUserByOnDNShift", user1);
 				}
@@ -1248,6 +1276,7 @@ public class SwipeCard extends JFrame {
 		String Id=eif.getId();
 		String name=eif.getName();
 		String WorkshopNo = workShopNoJlabel.getText();
+		String PROD_LINE_CODE = linenoLabel.getText();
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
 		User userNSwipe = new User();
@@ -1260,6 +1289,7 @@ public class SwipeCard extends JFrame {
 		userNSwipe.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 		userNSwipe.setShift(yesterdayShift);
 		userNSwipe.setWorkshopNo(WorkshopNo);
+		userNSwipe.setPROD_LINE_CODE(PROD_LINE_CODE);
 		
 		int yesterdaygoWorkCardCount = session
 				.selectOne("selectCountNByCardID", userNSwipe);
@@ -1345,6 +1375,7 @@ public class SwipeCard extends JFrame {
 
 		//String WorkshopNo = textT1_1.getText();
 		String WorkshopNo = workShopNoJlabel.getText();
+		String PROD_LINE_CODE = linenoLabel.getText();
 		String name = eif.getName();
 		String Id = eif.getId();
 		String RC_NO = jtf.getText();
@@ -1364,6 +1395,7 @@ public class SwipeCard extends JFrame {
 		userSwipeDup.setWorkshopNo(WorkshopNo);
 		userSwipeDup.setShift(curShift);		
 		userSwipeDup.setRecord_status("5");
+		userSwipeDup.setPROD_LINE_CODE(PROD_LINE_CODE);
 		synchronized (this){
 		session.update("updateRawRecordStatus",userSwipeDup);
 		session.insert("goWorkSwipeDuplicate", userSwipeDup);
@@ -1379,6 +1411,7 @@ public class SwipeCard extends JFrame {
 		String Id = eif.getId();
 		String RC_NO = jtf.getText();
 		String PRIMARY_ITEM_NO = textT2_1.getText();
+		String PROD_LINE_CODE = linenoLabel.getText();
 
 		jtextT1_1.setBackground(Color.WHITE);
 		jtextT1_1.append("ID: " + Id + " Name: " + name + "\n" + "下班重複刷卡！\n");
@@ -1392,6 +1425,7 @@ public class SwipeCard extends JFrame {
 		userSwipeDup.setRC_NO(RC_NO);
 		userSwipeDup.setPRIMARY_ITEM_NO(PRIMARY_ITEM_NO);
 		userSwipeDup.setWorkshopNo(WorkshopNo);
+		userSwipeDup.setPROD_LINE_CODE(PROD_LINE_CODE);
 		userSwipeDup.setShift(curShift);
 		
 		userSwipeDup.setRecord_status("5");
@@ -1728,28 +1762,30 @@ public class SwipeCard extends JFrame {
 
 	public static void main(String args[]) {
 		boolean OneWindow = OpenOneWindow.checkLock();
+		
 		if (OneWindow) {
 			InitGlobalFont(new Font("微软雅黑", Font.BOLD, 18));
 			final String defaultWorkshopNo = jsonFileUtil.getSaveWorkshopNo();
 			String WorkShopNo = null;
+			String LineNo =null;
+			if(defaultLineNo != null){
+				LineNo = defaultLineNo;
+			}
 			if (defaultWorkshopNo != null) {
 				WorkShopNo = defaultWorkshopNo;
-				SwipeCard d = new SwipeCard(WorkShopNo);
-				//檢測ip是否可用
-				String ip = getLocalIp();
-				CheckIp checkIp = new CheckIp(ip);
-				Thread executeCheckIp = new Thread(checkIp);
-				executeCheckIp.start();
-				CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
-				Thread executeCheckVersion = new Thread(chkVersion);
-				executeCheckVersion.start();
+				SwipeCard d = new SwipeCard(WorkShopNo,LineNo);
 			} else {
 				SwipeCardLogin d = new SwipeCardLogin();
-
-				CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
-				Thread executeCheckVersion = new Thread(chkVersion);
-				executeCheckVersion.start();
 			}
+			//檢測ip是否可用
+			String ip = getLocalIp();
+			CheckIp checkIp = new CheckIp(ip);
+			Thread executeCheckIp = new Thread(checkIp);
+			executeCheckIp.start();
+			//检测版本是否最新
+			CheckCurrentVersion chkVersion = new CheckCurrentVersion(CurrentVersion);
+			Thread executeCheckVersion = new Thread(chkVersion);
+			executeCheckVersion.start();
 		} else {
 			JOptionPane.showConfirmDialog(null, "程序已經開啟，請不要重複開啟", "程序重複打開", JOptionPane.DEFAULT_OPTION);
 			System.exit(0);
