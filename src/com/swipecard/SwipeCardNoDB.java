@@ -6,6 +6,8 @@ import java.awt.Font;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.TextEvent;
 import java.awt.event.TextListener;
 import java.io.BufferedReader;
@@ -267,7 +269,29 @@ public class SwipeCardNoDB extends JFrame {
 		tmr.scheduleAtFixedRate(new JLabelTimerTask(), new Date(), ONE_SECOND);
 
 		 final Timer checkDBLinktmr = new Timer();
-	     checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),5 * 60 * 1000, 5 * 60 * 1000);
+	     checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),20 * 1000, 20 * 1000);
+	     
+	     comboBox1.addItemListener(new ItemListener() {
+
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					// TODO Auto-generated method stub
+
+					if (e.getStateChange() == ItemEvent.SELECTED) {
+						String key = jtf1.getText();
+						lineno = getLineno(comboBox1.getSelectedItem().toString());
+						comboBox2.removeAllItems();
+						if (lineno != null) {
+							for (Object object : lineno) {
+								comboBox2.addItem(object);
+							}
+						} else {
+							comboBox2.addItem("不需要選擇線號");
+						}
+
+					}
+				}
+			});
 
 		butT1_5.addActionListener(new ActionListener() {
 

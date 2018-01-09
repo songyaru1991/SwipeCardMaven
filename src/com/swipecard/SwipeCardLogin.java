@@ -8,8 +8,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Reader;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -193,13 +197,24 @@ public class SwipeCardLogin extends JFrame {
 		// TODO Auto-generated method stub
 		List<User> user;
 		JSONObject jsonObject = new JSONObject();
+		Map<String, String> map = new HashMap<>();
 		try {
 			SqlSession session = sqlSessionFactory.openSession();
 			user = session.selectList("selectLineNoList");
 			int con = user.size();
 			if (con > 0) {
 				for (int i = 0; i < con; i++) {
-					jsonObject.put(user.get(i).getWorkshopNo(), user.get(i).getLineNo());
+					if(map.containsKey(user.get(i).getWorkshopNo())){
+						String str = map.get(user.get(i).getWorkshopNo())+","+user.get(i).getLineNo();
+						map.put(user.get(i).getWorkshopNo(), str);
+					}else{
+						map.put(user.get(i).getWorkshopNo(), user.get(i).getLineNo());
+					}
+				}
+				Iterator<Entry<String, String>> entries = map.entrySet().iterator();
+				while (entries.hasNext()) {  
+				    Entry<String, String> entry = entries.next();  
+				    jsonObject.put(entry.getKey(), entry.getValue());
 				}
 				String fileName = "LineNo.json";
 				jsonFileUtil.createWorkshopNoJsonFile(jsonObject.toString(), fileName);
