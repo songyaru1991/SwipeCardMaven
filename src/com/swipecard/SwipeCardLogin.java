@@ -197,7 +197,7 @@ public class SwipeCardLogin extends JFrame {
 		// TODO Auto-generated method stub
 		List<User> user;
 		JSONObject jsonObject = new JSONObject();
-		Map<String, String> map = new HashMap<>();
+		Map<String, String> map = new HashMap<String, String>();
 		try {
 			SqlSession session = sqlSessionFactory.openSession();
 			user = session.selectList("selectLineNoList");
