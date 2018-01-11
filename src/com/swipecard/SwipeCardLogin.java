@@ -237,15 +237,19 @@ public class SwipeCardLogin extends JFrame {
 		Object[] a = null;
 		Object[] s = null;
 		System.out.println(selectWorkshopNo);
-		linenoList = LineNoObject.getString(selectWorkshopNo);
-		System.out.println(linenoList);
-		if (!(linenoList == null || linenoList.equals(""))) {
-			s = linenoList.split(",");
-			int con = s.length;
-			a = new Object[con + 1];
-			a[0] = "請選擇線號";
-			for (int i = 1; i < con + 1; i++) {
-				a[i] = s[i - 1];
+		if(!(selectWorkshopNo == null || selectWorkshopNo.equals("") || selectWorkshopNo.equals("--請選擇車間--"))){
+			if(!(LineNoObject == null || LineNoObject.equals(""))){
+				linenoList = LineNoObject.getString(selectWorkshopNo);
+				System.out.println(linenoList);
+				if (!(linenoList == null || linenoList.equals(""))) {
+					s = linenoList.split(",");
+					int con = s.length;
+					a = new Object[con + 1];
+					a[0] = "請選擇線號";
+					for (int i = 1; i < con + 1; i++) {
+						a[i] = s[i - 1];
+					}
+				}
 			}
 		}
 		return a;

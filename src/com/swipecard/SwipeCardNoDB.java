@@ -425,14 +425,18 @@ public class SwipeCardNoDB extends JFrame {
 		Object[] a = null;
 		Object[] s = null;
 		System.out.println(selectWorkshopNo);
-		linenoList = LineNoObject.getString(selectWorkshopNo);
-		System.out.println(linenoList);
-		if (!(linenoList == null || linenoList.equals(""))) {
-			s = linenoList.split(",");
-			int con = s.length;
-			a = new Object[con];
-			for (int i = 1; i < con + 1; i++) {
-				a[i - 1] = s[i - 1].toString().trim();
+		if(!(selectWorkshopNo == null || selectWorkshopNo.equals("") || selectWorkshopNo.equals("--請選擇車間--"))){
+			if(!(LineNoObject == null || LineNoObject.equals(""))){
+				linenoList = LineNoObject.getString(selectWorkshopNo);
+				System.out.println(linenoList);
+				if (!(linenoList == null || linenoList.equals(""))) {
+					s = linenoList.split(",");
+					int con = s.length;
+					a = new Object[con];
+					for (int i = 1; i < con + 1; i++) {
+						a[i - 1] = s[i - 1].toString().trim();
+					}
+				}
 			}
 		}
 		return a;
