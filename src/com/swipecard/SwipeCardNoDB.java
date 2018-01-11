@@ -271,7 +271,7 @@ public class SwipeCardNoDB extends JFrame {
 		tmr.scheduleAtFixedRate(new JLabelTimerTask(), new Date(), ONE_SECOND);
 
 		 final Timer checkDBLinktmr = new Timer();
-	     checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),20 * 1000, 20 * 1000);
+	     checkDBLinktmr.scheduleAtFixedRate(new CheckDBLinkTimerTask(),5 * 60 * 1000, 5 * 60 * 1000);
 	     
 	     comboBox1.addItemListener(new ItemListener() {
 
