@@ -3,6 +3,7 @@ package com.swipecard;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.List;
+import java.util.Properties;
 import java.util.Vector;
 
 import javax.swing.JFrame;
@@ -17,6 +18,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.log4j.Logger;
 
 import com.swipecard.model.User;
+import com.swipecard.util.DESUtils;
 
 public class MyNewTableModel extends AbstractTableModel {
 	private static Logger logger = Logger.getLogger(MyNewTableModel.class);
@@ -25,14 +27,20 @@ public class MyNewTableModel extends AbstractTableModel {
 	// private Vector TableTitle;// 表格的 列标题
 	private static SqlSessionFactory sqlSessionFactory;
 	private static Reader reader;
+	static Properties pps = new Properties();
+	static Reader pr = null;
 	static {
 		try {
+			pr = Resources.getResourceAsReader("db.properties");
+			pps.load(pr);
+			pps.setProperty("username", DESUtils.getDecryptString(pps.getProperty("username")));
+			pps.setProperty("password", DESUtils.getDecryptString(pps.getProperty("password")));
 			reader = Resources.getResourceAsReader("Configuration.xml");
 			/*
 			 * String filePath = System.getProperty("user.dir") +
 			 * "/Configuration.xml"; FileReader reader=new FileReader(filePath);
 			 */
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,pps);
 		} catch (Exception e) {
 			logger.error("綁定指示單號時Error building SqlSession，原因:"+e);
 			e.printStackTrace();

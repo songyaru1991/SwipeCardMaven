@@ -3,6 +3,7 @@ package com.swipecard;
 import java.io.Reader;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.JOptionPane;
 
@@ -16,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.json.JSONObject;
 
 import com.swipecard.model.User;
+import com.swipecard.util.DESUtils;
 
 public class CheckIp implements Runnable{
 	private static Logger logger = Logger.getLogger(CheckIp.class);
@@ -25,15 +27,21 @@ public class CheckIp implements Runnable{
 	private	Object[] Eip;
 	private Object[] Cip;
 	private Timestamp CurrentDBTimeStamp;
-	
+	static Properties pps = new Properties();
+	static Reader pr = null;
 	static {
 		try {
+			pr = Resources.getResourceAsReader("db.properties");
+			pps.load(pr);
+			pps.setProperty("username", DESUtils.getDecryptString(pps.getProperty("username")));
+			pps.setProperty("password", DESUtils.getDecryptString(pps.getProperty("password")));
+			
 			reader = Resources.getResourceAsReader("Configuration.xml");
 			/*
 			 * String filePath = System.getProperty("user.dir") +
 			 * "/Configuration.xml"; FileReader reader=new FileReader(filePath);
 			 */
-			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+			sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader,pps);
 		} catch (Exception e) {
 			logger.error("檢測ip時 Error building SqlSession，原因:"+e);
 			e.printStackTrace();
@@ -74,6 +82,7 @@ public class CheckIp implements Runnable{
 		} catch (Exception e) {
 			System.out.println("Error opening session");
 			logger.error("获取通用ip异常，原因:"+e);
+			SwipeCardNoDB d = new SwipeCardNoDB(null);
 			throw ExceptionFactory.wrapException("Error opening session.  Cause: " + e, e);
 		} finally {
 			ErrorContext.instance().reset();
@@ -107,9 +116,12 @@ public class CheckIp implements Runnable{
 			}
 			
 			for (Object object : Eip) {
-				if(str.contains((String)object)){
-					return true;
+				if(!(object == null || object.equals(""))){
+					if(str.contains((String)object)){
+						return true;
+					}
 				}
+				
 			}
 			
 			for (Object object : Cip) {
