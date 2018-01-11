@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -236,6 +237,7 @@ public class SwipeCardLogin extends JFrame {
 		String linenoList;
 		Object[] a = null;
 		Object[] s = null;
+		ArrayList<Object> list = new ArrayList<Object>();
 		System.out.println(selectWorkshopNo);
 		if(!(selectWorkshopNo == null || selectWorkshopNo.equals("") || selectWorkshopNo.equals("--請選擇車間--"))){
 			if(!(LineNoObject == null || LineNoObject.equals(""))){
@@ -244,10 +246,22 @@ public class SwipeCardLogin extends JFrame {
 				if (!(linenoList == null || linenoList.equals(""))) {
 					s = linenoList.split(",");
 					int con = s.length;
-					a = new Object[con + 1];
-					a[0] = "請選擇線號";
-					for (int i = 1; i < con + 1; i++) {
-						a[i] = s[i - 1];
+					for(int i = 0; i<con ; i++){
+						String str;
+						str = s[i].toString().trim();
+						if(!(str == null || str.equals(""))){
+							list.add(s[i]);
+						}
+					}
+					int lcon = list.size();
+					System.out.println(lcon);
+					if(lcon>0){
+						a = new Object[lcon + 2];
+						a[0] = "請選擇線號";
+						a[1] = "不需要選擇線號";
+						for (int i = 0; i < lcon; i++) {
+							a[i+2] = list.get(i);
+						}
 					}
 				}
 			}
