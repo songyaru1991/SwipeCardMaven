@@ -93,7 +93,7 @@ public class CheckCurrentVersion implements Runnable {
 
 				if (isLatest) {
 					System.out.println("程式為最新版本");
-					Thread.currentThread().sleep(60*60*1000);
+					Thread.currentThread().sleep(60*60*1000);//60*60*1s
 				} else {
 					if ((currentHour >= 9 && currentHour < 12) || (currentHour >= 14 && currentHour < 17)
 							|| (currentHour >= 21 && currentHour < 24) || (currentHour >= 1 && currentHour < 7)) {
