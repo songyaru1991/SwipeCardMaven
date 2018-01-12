@@ -453,7 +453,7 @@
     </select>
     
     <select id="selectLineNoList" resultType="User">
-    	SELECT workshopno,lineno from lineno;
+    	SELECT distinct workshopno,lineno from lineno;
     </select>
     
 </mapper>  
