@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Reader;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -123,7 +124,7 @@ public class SwipeCardLogin extends JFrame {
 		but1.setFont(new Font("微软雅黑", Font.BOLD, 18));
 		label2.setBounds(120, 200, 100, 30);
 		text1.setBounds(220, 200, 160, 40);
-		but1.setBounds(240, 340, 120, 40);
+		but1.setBounds(240, 300, 120, 40);
 
 		label3.setBounds(120, 120, 100, 30);
 		comboBox1.setBounds(220, 120, 160, 40);
@@ -134,11 +135,11 @@ public class SwipeCardLogin extends JFrame {
 		}
 		// 新增label
 		JLabel label = new JLabel("線號：");
-		label.setBounds(120, 276, 54, 24);
+		label.setBounds(120, 185, 54, 24);
 		panel1.add(label);
 		// 新增下拉控件
 		comboBox2 = new JComboBox();
-		comboBox2.setBounds(220, 273, 160, 40);
+		comboBox2.setBounds(220, 180, 160, 40);
 		lineno = getLineno(comboBox1.getSelectedItem().toString());
 		if (lineno != null) {
 			for (Object object : lineno) {
@@ -236,16 +237,33 @@ public class SwipeCardLogin extends JFrame {
 		String linenoList;
 		Object[] a = null;
 		Object[] s = null;
+		ArrayList<Object> list = new ArrayList<Object>();
 		System.out.println(selectWorkshopNo);
-		linenoList = LineNoObject.getString(selectWorkshopNo);
-		System.out.println(linenoList);
-		if (!(linenoList == null || linenoList.equals(""))) {
-			s = linenoList.split(",");
-			int con = s.length;
-			a = new Object[con + 1];
-			a[0] = "請選擇線號";
-			for (int i = 1; i < con + 1; i++) {
-				a[i] = s[i - 1];
+		if(!(selectWorkshopNo == null || selectWorkshopNo.equals("") || selectWorkshopNo.equals("--請選擇車間--"))){
+			if(!(LineNoObject == null || LineNoObject.equals(""))){
+				linenoList = LineNoObject.getString(selectWorkshopNo);
+				System.out.println(linenoList);
+				if (!(linenoList == null || linenoList.equals(""))) {
+					s = linenoList.split(",");
+					int con = s.length;
+					for(int i = 0; i<con ; i++){
+						String str;
+						str = s[i].toString().trim();
+						if(!(str == null || str.equals(""))){
+							list.add(s[i]);
+						}
+					}
+					int lcon = list.size();
+					System.out.println(lcon);
+					if(lcon>0){
+						a = new Object[lcon + 2];
+						a[0] = "請選擇線號";
+						a[1] = "不需要選擇線號";
+						for (int i = 0; i < lcon; i++) {
+							a[i+2] = list.get(i);
+						}
+					}
+				}
 			}
 		}
 		return a;

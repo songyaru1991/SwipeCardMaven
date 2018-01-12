@@ -168,6 +168,9 @@ public class SwipeCardNoDB extends JFrame {
 		labelT1_3 = new JLabel("刷卡:");
 		labelT1_3.setFont(new Font("微软雅黑", Font.BOLD, 25));
 
+		JLabel label1_2 = new JLabel("線號：");		
+		label1_2.setFont(new Font("微软雅黑", Font.BOLD, 25));
+		
 		JsonFileUtil jsonFileUtil = new JsonFileUtil();
 		final Object[] WorkshopNo = jsonFileUtil.getWorkshopNoByJson();
 		comboBox1 = new JComboBox(WorkshopNo);
@@ -179,6 +182,20 @@ public class SwipeCardNoDB extends JFrame {
 
 		jtf1 = (JTextField) comboBox1.getEditor().getEditorComponent();		
 		
+		comboBox2 = new JComboBox();	
+		comboBox2.setEditable(true);
+		lineno = getLineno(comboBox1.getSelectedItem().toString());
+		if (lineno != null) {
+			for (Object object : lineno) {
+				comboBox2.addItem(object);
+			}
+		} else {
+			comboBox2.addItem("不需要選擇線號");
+		}
+		if (defaultLineNo != null) {
+			comboBox2.setSelectedItem(defaultLineNo);
+		}
+		
 		curTimeLable = new JLabel();
 		curTimeLable.setFont(new Font("微软雅黑", Font.BOLD, 35));
 
@@ -189,16 +206,18 @@ public class SwipeCardNoDB extends JFrame {
 		int y1 = 40, y4 = 180;
 
 		labelT1_1.setBounds(x1 + 20, y1, x7, y1);
-		labelT1_3.setBounds(x1 + 20, 2 * y1 + 20, x7, y1);
+		label1_2.setBounds(x1+20, 2 * y1 + 20, x7, y1);
+		labelT1_3.setBounds(x1 + 20, 3 * y1 + 40, x7, y1);
 
 		// textT1_1.setBounds(x1 + x7, 1 * y1, y4 + 100, y1);
 		comboBox1.setBounds(x1 + x7, 1 * y1, y4 + 100, y1);
-		textT1_3.setBounds(x1 + x7, 2 * y1 + 20, y4 + 100, y1);
+		comboBox2.setBounds(x1 + x7, 2 * y1 + 20, y4 + 100, y1);
+		textT1_3.setBounds(x1 + x7, 3 * y1 + 40, y4 + 100, y1);
 
 		jtextT1_2.setBounds(x1 + x7, 9 * y1, x4, y1);
 
 		swipeTimeLable.setBounds(400, y1, x4, 50);
-		curTimeLable.setBounds(x1 + 10, 3 * y1 + 40, 400, 50);
+		curTimeLable.setBounds(x1 + 10, 4 * y1 + 60, 400, 50);
 
 		jspT1_1 = new JScrollPane(jtextT1_1);
 		jspT1_1.setBounds(400, 2 * y1 + 20, x4, 250);
@@ -234,24 +253,9 @@ public class SwipeCardNoDB extends JFrame {
 
 		butT1_5.setBounds(x6, 350 + y1 + 20, x5, y1);
 		butT1_6.setBounds(x6 + 160, 350 + y1 + 20, x5, y1);
-		JLabel label = new JLabel("線號：");
-		label.setBounds(35, 281, 75, 24);
-		label.setFont(new Font("微软雅黑", Font.BOLD, 25));
-		panel1.add(label);
-		comboBox2 = new JComboBox();
-		comboBox2.setBounds(114, 273, 271, 40);
-		comboBox2.setEditable(true);
-		lineno = getLineno(comboBox1.getSelectedItem().toString());
-		if (lineno != null) {
-			for (Object object : lineno) {
-				comboBox2.addItem(object);
-			}
-		} else {
-			comboBox2.addItem("不需要選擇線號");
-		}
-		if (defaultLineNo != null) {
-			comboBox2.setSelectedItem(defaultLineNo);
-		}
+		
+		panel1.add(label1_2);
+		
 		panel1.add(comboBox2);
 		panel1.add(comboBox1);
 		// panel1.add(textT1_1);
@@ -425,14 +429,18 @@ public class SwipeCardNoDB extends JFrame {
 		Object[] a = null;
 		Object[] s = null;
 		System.out.println(selectWorkshopNo);
-		linenoList = LineNoObject.getString(selectWorkshopNo);
-		System.out.println(linenoList);
-		if (!(linenoList == null || linenoList.equals(""))) {
-			s = linenoList.split(",");
-			int con = s.length;
-			a = new Object[con];
-			for (int i = 1; i < con + 1; i++) {
-				a[i - 1] = s[i - 1].toString().trim();
+		if(!(selectWorkshopNo == null || selectWorkshopNo.equals("") || selectWorkshopNo.equals("--請選擇車間--"))){
+			if(!(LineNoObject == null || LineNoObject.equals(""))){
+				linenoList = LineNoObject.getString(selectWorkshopNo);
+				System.out.println(linenoList);
+				if (!(linenoList == null || linenoList.equals(""))) {
+					s = linenoList.split(",");
+					int con = s.length;
+					a = new Object[con];
+					for (int i = 1; i < con + 1; i++) {
+						a[i - 1] = s[i - 1].toString().trim();
+					}
+				}
 			}
 		}
 		return a;
